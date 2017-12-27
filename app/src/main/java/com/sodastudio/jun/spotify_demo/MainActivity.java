@@ -27,8 +27,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Album;
+import kaaes.spotify.webapi.android.models.TracksPager;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity
     private static final String REDIRECT_URI = "http://localhost:8888/callback";
 
     private static final int REQUEST_CODE = 1337;
+
+    private static final String TAG = "MainActivity";
 
     private Player mPlayer;
 
@@ -91,16 +96,29 @@ public class MainActivity extends AppCompatActivity
 
                         SpotifyService spotifyService = api.getService();
 
-                        spotifyService.getAlbum("2dIGnmEIy1WZIcZCFSj6i8", new Callback<Album>() {
+                        spotifyService.searchTracks("Maroon 5", new SpotifyCallback<TracksPager>() {
                             @Override
-                            public void success(Album album, Response response) {
-                                Log.d("Album success", album.name);
-
+                            public void failure(SpotifyError spotifyError) {
+                                Log.d(TAG, "failed.. " + spotifyError.toString());
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
-                                Log.d("Album failure", error.toString());
+                            public void success(TracksPager tracksPager, Response response) {
+                                                // artist: Maroon 5
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).uri);              // music link
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).name);             // title
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).album.name);       // album name
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).album.images.get(0).url);  // album image
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).duration_ms);          // song duration
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).artists.get(0).name); // artists
+
+
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).uri);              // music link
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).name);             // title
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).album.name);       // album name
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).album.images.get(0).url);  // album image
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).duration_ms);          // song duration
+                                Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).artists.get(0).name); // artists
                             }
                         });
                     }
@@ -174,49 +192,6 @@ public class MainActivity extends AppCompatActivity
         Spotify.destroyPlayer(this);
         super.onDestroy();
     }
-
-    private class BackgroundTask extends AsyncTask<Void, Void, String>
-    {
-        String target;
-
-        @Override
-        protected void onPreExecute(){
-
-            target = "";
-
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-
-            try {
-                URL url = new URL(target);
-
-                InputStream inputStream = (InputStream)url.getContent();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                String temp;
-                StringBuilder stringBuilder = new StringBuilder();
-                while((temp = bufferedReader.readLine()) != null)
-                {
-                    stringBuilder.append(temp + "\n");
-                }
-
-                bufferedReader.close();
-                inputStream.close();
-
-                Log.d("MainActivity", stringBuilder.toString().trim());
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
-
 
 }
 

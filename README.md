@@ -1,4 +1,4 @@
-# spotify-demo
+# spotify-demo (work-in-progress 👷🔧️👷‍♀️⛏)
 Using the Spotify Android SDK to play an audio track.
 
 ## Installing Android SDK
