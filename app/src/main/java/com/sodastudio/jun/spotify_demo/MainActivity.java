@@ -1,6 +1,7 @@
 package com.sodastudio.jun.spotify_demo;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,22 +14,39 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
+import com.spotify.sdk.android.player.Metadata;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
+import kaaes.spotify.webapi.android.models.UserPrivate;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class MainActivity extends AppCompatActivity
     implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback
 {
     private static final String CLIENT_ID = "5de6930c8a744270851a5064c7ff6333";
-    private static final String REDIRECT_URI = "spotify-demo://callback";
+    private static final String REDIRECT_URI = "http://localhost:8888/callback";
 
     private static final int REQUEST_CODE = 1337;
 
     private Player mPlayer;
 
     private Button mPlayButton;
+
+    private static String TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +61,17 @@ public class MainActivity extends AppCompatActivity
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
         mPlayButton = (Button)findViewById(R.id.play_music);
+
+
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == REQUEST_CODE)
         {
-            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
+            final AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
                 Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
                 Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
@@ -60,6 +80,29 @@ public class MainActivity extends AppCompatActivity
                         mPlayer = spotifyPlayer;
                         mPlayer.addConnectionStateCallback(MainActivity.this);
                         mPlayer.addNotificationCallback(MainActivity.this);
+
+                        Log.d("MainActivity", "AccessToken: " + response.getAccessToken());
+
+                        TOKEN = response.getAccessToken();
+
+                        SpotifyApi api = new SpotifyApi();
+
+                        api.setAccessToken(TOKEN);
+
+                        SpotifyService spotifyService = api.getService();
+
+                        spotifyService.getAlbum("2dIGnmEIy1WZIcZCFSj6i8", new Callback<Album>() {
+                            @Override
+                            public void success(Album album, Response response) {
+                                Log.d("Album success", album.name);
+
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.d("Album failure", error.toString());
+                            }
+                        });
                     }
 
                     @Override
@@ -100,6 +143,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 mPlayer.playUri(null, "spotify:track:4nYsmWkuTaowTMy4gskmBw", 0, 0);
+
             }
         });
 
@@ -130,4 +174,73 @@ public class MainActivity extends AppCompatActivity
         Spotify.destroyPlayer(this);
         super.onDestroy();
     }
+
+    private class BackgroundTask extends AsyncTask<Void, Void, String>
+    {
+        String target;
+
+        @Override
+        protected void onPreExecute(){
+
+            target = "";
+
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL(target);
+
+                InputStream inputStream = (InputStream)url.getContent();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                String temp;
+                StringBuilder stringBuilder = new StringBuilder();
+                while((temp = bufferedReader.readLine()) != null)
+                {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+
+                Log.d("MainActivity", stringBuilder.toString().trim());
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

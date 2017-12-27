@@ -23,6 +23,12 @@ This step is needed for registering application fingerprint
 echo -n password | shasum -a 1 | awk '{print $1}'
 ```
 
+## Get data from Spotify Web API
+- Thanks to Kaaes for providing a easy way to use Spotify API from Android Client
+- [Spotify Web API for Android](https://github.com/kaaes/spotify-web-api-android)
+- [Documentation](http://kaaes.github.io/spotify-web-api-android/)
+
+
 ## Dependency
 ```sh
 repositories {
@@ -30,6 +36,7 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -37,5 +44,6 @@ dependencies {
 
     compile 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'
     compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
+    compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
 }
 ``` 
