@@ -1,5 +1,5 @@
 # spotify-demo (work-in-progress 👷🔧️👷‍♀️⛏)
-Using the Spotify Android SDK to play an audio track.
+Music player app using the Spotify Android SDK to play an audio track.
 
 ## Installing Android SDK
 You can follow the [Spotify Android SDK Tutorial](https://developer.spotify.com/technologies/spotify-android-sdk/tutorial/) to start the set up.
@@ -24,7 +24,7 @@ echo -n password | shasum -a 1 | awk '{print $1}'
 ```
 
 ## Get data from Spotify Web API
-- Thanks to Kaaes for providing a easy way to use Spotify API from Android Client
+- Thanks to Kaaes for providing an easy way to use Spotify API from Android Client
 - [Spotify Web API for Android](https://github.com/kaaes/spotify-web-api-android)
 - [Documentation](http://kaaes.github.io/spotify-web-api-android/)
 

@@ -13,4 +13,10 @@
         android:layout_height="50dp"
         android:text="play"/>
 
+    <Button
+        android:id="@+id/pause_music"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="pause"/>
+
 </LinearLayout>

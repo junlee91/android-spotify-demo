@@ -1,7 +1,6 @@
 package com.sodastudio.jun.spotify_demo;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,17 +13,10 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
-import com.spotify.sdk.android.player.Metadata;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
@@ -32,9 +24,6 @@ import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.TracksPager;
-import kaaes.spotify.webapi.android.models.UserPrivate;
-import retrofit.Callback;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity
@@ -50,8 +39,21 @@ public class MainActivity extends AppCompatActivity
     private Player mPlayer;
 
     private Button mPlayButton;
+    private Button mPauseButton;
 
     private static String TOKEN;
+
+    Player.OperationCallback mCallback = new Player.OperationCallback() {
+        @Override
+        public void onSuccess() {
+
+        }
+
+        @Override
+        public void onError(Error error) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
         mPlayButton = (Button)findViewById(R.id.play_music);
-
+        mPauseButton = (Button)findViewById(R.id.pause_music);
 
     }
 
@@ -162,6 +164,14 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 mPlayer.playUri(null, "spotify:track:4nYsmWkuTaowTMy4gskmBw", 0, 0);
 
+            }
+        });
+
+        mPauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //mPlayer.pause(mCallback);
+                mPlayer.seekToPosition(null, 150);
             }
         });
 
