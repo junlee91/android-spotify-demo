@@ -1,7 +1,7 @@
 # spotify-demo (work-in-progress 👷🔧️👷‍♀️⛏)
 Music player app using the Spotify Android SDK to play an audio track.
 
-[![Screenshot](screenshot/demo-first.png)](https://github.com/junlee91/android-spotify-demo/blob/master/screenshot/demo-first.gif)
+[![Screenshot](screenshot/demo-first.gif)](https://github.com/junlee91/android-spotify-demo/blob/master/screenshot/demo-first.gif)
 
 ## Installing Android SDK
 You can follow the [Spotify Android SDK Tutorial](https://developer.spotify.com/technologies/spotify-android-sdk/tutorial/) to start the set up.
