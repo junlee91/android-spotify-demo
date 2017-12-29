@@ -8,4 +8,8 @@
 
     <color name="colorGrayLight">#444444</color>
     <color name="colorGrayDark">#121212</color>
+
+    <color name="colorTopHeaderBar">#191919</color>
+    <color name="colorBottomNavBar">#282828</color>
+    <color name="colorNavIcon">#ABABAB</color>
 </resources>

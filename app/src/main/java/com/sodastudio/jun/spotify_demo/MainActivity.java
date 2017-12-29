@@ -1,5 +1,6 @@
 package com.sodastudio.jun.spotify_demo;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.sodastudio.jun.spotify_demo.ui.MainFragment;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
@@ -59,13 +61,13 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FragmentManager manager = getFragmentManager();
+        manager.beginTransaction().replace(R.id.fragment_container, new MainFragment()).commit();
 
         AUTH_TOKEN = getIntent().getStringExtra(SpotifyLoginActivity.AUTH_TOKEN);
 
@@ -166,7 +168,7 @@ public class MainActivity extends AppCompatActivity
     private void updateView() {
         boolean loggedIn = isLoggedIn();
 
-        //TODO
+
     }
 
     private boolean isLoggedIn() {
