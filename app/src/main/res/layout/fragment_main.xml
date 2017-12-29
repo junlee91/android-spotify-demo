@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -34,13 +34,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="1dp"
             android:padding="5dp"
             android:background="@color/colorBottomNavBar"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/nav_home"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -48,6 +47,7 @@
                 android:layout_weight="1">
 
                 <Button
+                    android:id="@+id/nav_home"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/ic_home_black_24dp"/>
@@ -64,7 +64,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/nav_browse"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -72,6 +71,7 @@
                 android:layout_weight="1">
 
                 <Button
+                    android:id="@+id/nav_browse"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/ic_open_in_browser_black_24dp"/>
@@ -88,7 +88,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/nav_search"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -96,6 +95,7 @@
                 android:layout_weight="1">
 
                 <Button
+                    android:id="@+id/nav_search"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/ic_search_black_24dp"/>
@@ -112,7 +112,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/nav_radio"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -120,6 +119,7 @@
                 android:layout_weight="1">
 
                 <Button
+                    android:id="@+id/nav_radio"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/ic_radio_black_24dp"/>
@@ -136,7 +136,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/nav_library"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -144,6 +143,7 @@
                 android:layout_weight="1">
 
                 <Button
+                    android:id="@+id/nav_library"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/ic_library_music_black_24dp"/>

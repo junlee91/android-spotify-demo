@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoggedIn() {
         Log.d(TAG, "User logged in");
-        showToast("Login Success!");
+        //showToast("Login Success!");
     }
 
     @Override

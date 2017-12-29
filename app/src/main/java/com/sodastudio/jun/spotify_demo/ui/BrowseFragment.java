@@ -13,8 +13,7 @@ import com.sodastudio.jun.spotify_demo.R;
  * Created by jun on 12/28/17.
  */
 
-public class SearchFragment extends Fragment {
-
+public class BrowseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +22,7 @@ public class SearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_browse, container, false);
 
         return view;
     }
