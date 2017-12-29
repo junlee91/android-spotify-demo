@@ -4,14 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:background="@color/colorPrimaryDark"
+    android:gravity="center|top"
     android:orientation="vertical"
     tools:context="com.sodastudio.jun.spotify_demo.SpotifyLoginActivity">
 
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Login"/>
+    <ImageView
+        android:padding="30dp"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/main_logo_white"/>
 
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="@string/welcome"
+        android:textColor="#ffffff"/>
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:textColor="@color/colorLoginPressed"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:text="@string/welcome_text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:padding="30dp"
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/create_account_button"
+            android:text="@string/create_account"
+            android:textColor="#ffffff"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="12sp"
+            android:text="@string/already_user"
+            android:textColor="#ffffff"/>
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/round_rect"
+            android:backgroundTint="#ffffff"
+            android:textStyle="bold"
+            android:text="@string/login_button"/>
+
+    </LinearLayout>
 </LinearLayout>

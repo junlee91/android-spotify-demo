@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">spotify-demo</string>
+
+    <string name="create_account">CREATE ACCOUNT</string>
+    <string name="already_user">Already a user?</string>
+    <string name="login_button">LOG IN</string>
+
+    <string name="welcome">Welcome</string>
+    <string name="welcome_text">Sign up for free music on your phone, tablet, and computer.</string>
 </resources>

@@ -3,7 +3,8 @@
     <color name="colorPrimary">#071C24</color>
     <color name="colorPrimaryDark">#06151b</color>
     <color name="colorAccent">#00D474</color>
-
+    <color name="colorAccentPressed">#24f798</color>
+    <color name="colorLoginPressed">#e1e0e0</color>
 
     <color name="colorGrayLight">#444444</color>
     <color name="colorGrayDark">#121212</color>
