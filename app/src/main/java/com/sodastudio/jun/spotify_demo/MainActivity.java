@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
@@ -31,24 +29,7 @@ public class MainActivity extends AppCompatActivity
     implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback
 {
 
-    //   ____                _              _
-    //  / ___|___  _ __  ___| |_ __ _ _ __ | |_ ___
-    // | |   / _ \| '_ \/ __| __/ _` | '_ \| __/ __|
-    // | |__| (_) | | | \__ \ || (_| | | | | |_\__ \
-    //  \____\___/|_| |_|___/\__\__,_|_| |_|\__|___/
-    //
-
-    @SuppressWarnings("SpellCheckingInspection")
-    private static final String CLIENT_ID = "5de6930c8a744270851a5064c7ff6333";
-    @SuppressWarnings("SpellCheckingInspection")
-    private static final String REDIRECT_URI = "http://localhost:8888/callback";
-
-    /**
-     * Request code that will be passed together with authentication result to the onAuthenticationResult
-     */
-    private static final int REQUEST_CODE = 1337;
-
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "Spotify MainActivity";
 
     //  _____ _      _     _
     // |  ___(_) ___| | __| |___
@@ -60,8 +41,7 @@ public class MainActivity extends AppCompatActivity
     private SpotifyPlayer mPlayer;
     private PlaybackState mCurrentPlaybackState;
 
-    private Button mPlayButton;
-    private Button mLoginButton;
+    private Toast mToast;
 
     private String AUTH_TOKEN;
 
@@ -79,96 +59,27 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-    //  ___       _ _   _       _ _          _   _
-    // |_ _|_ __ (_) |_(_) __ _| (_)______ _| |_(_) ___  _ __
-    //  | || '_ \| | __| |/ _` | | |_  / _` | __| |/ _ \| '_ \
-    //  | || | | | | |_| | (_| | | |/ / (_| | |_| | (_) | | | |
-    // |___|_| |_|_|\__|_|\__,_|_|_/___\__,_|\__|_|\___/|_| |_|
-    //
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // set views
-        mPlayButton = (Button)findViewById(R.id.play_music);
-        mLoginButton = (Button)findViewById(R.id.login_button);
 
-        mLoginButton.setOnClickListener(mListener);
+        AUTH_TOKEN = getIntent().getStringExtra(SpotifyLoginActivity.AUTH_TOKEN);
 
+        onAuthenticationComplete(AUTH_TOKEN);
         updateView();
     }
 
-
-    View.OnClickListener mListener = new View.OnClickListener(){
-
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.login_button:
-                    onLoginButtonClicked();
-                    break;
-
-                case R.id.play_music:
-                    break;
-            }
-        }
-    };
-
-
-    //     _         _   _                _   _           _   _
-    //    / \  _   _| |_| |__   ___ _ __ | |_(_) ___ __ _| |_(_) ___  _ __
-    //   / _ \| | | | __| '_ \ / _ \ '_ \| __| |/ __/ _` | __| |/ _ \| '_ \
-    //  / ___ \ |_| | |_| | | |  __/ | | | |_| | (_| (_| | |_| | (_) | | | |
-    // /_/   \_\__,_|\__|_| |_|\___|_| |_|\__|_|\___\__,_|\__|_|\___/|_| |_|
-    //
-
-    private void openLoginWindow() {
-
-        AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN,REDIRECT_URI);
-
-        builder.setScopes(new String[]{"user-read-private", "streaming"});
-        AuthenticationRequest request = builder.build();
-
-        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == REQUEST_CODE)
-        {
-            final AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
-
-            switch (response.getType()) {
-                // Response was successful and contains auth token
-                case TOKEN:
-                    onAuthenticationComplete(response);
-                    break;
-
-                // Auth flow returned an error
-                case ERROR:
-                    Log.e(TAG,"Auth error: " + response.getError());
-                    break;
-
-                // Most likely auth flow was cancelled
-                default:
-                    Log.d(TAG,"Auth result: " + response.getType());
-            }
-        }
-    }
-
-    private void onAuthenticationComplete(final AuthenticationResponse response) {
+    private void onAuthenticationComplete(final String auth_token) {
 
         Log.d(TAG,"Got authentication token");
 
-        AUTH_TOKEN = response.getAccessToken();
-
         if(mPlayer == null)
         {
-            Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
+            Config playerConfig = new Config(this, auth_token, SpotifyLoginActivity.CLIENT_ID);
 
             Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
                 @Override
@@ -178,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                     mPlayer.addConnectionStateCallback(MainActivity.this);
                     mPlayer.addNotificationCallback(MainActivity.this);
 
-                    Log.d("MainActivity", "AccessToken: " + response.getAccessToken());
+                    Log.d(TAG, "AccessToken: " + auth_token);
 
                     // Trigger UI refresh
                     updateView();
@@ -188,11 +99,11 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void onError(Throwable throwable) {
-                    Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+                    Log.e(TAG, "Could not initialize player: " + throwable.getMessage());
                 }
             });
         } else {
-            mPlayer.login(response.getAccessToken());
+            mPlayer.login(auth_token);
         }
 
     }
@@ -254,19 +165,21 @@ public class MainActivity extends AppCompatActivity
 
     private void updateView() {
         boolean loggedIn = isLoggedIn();
+
+        //TODO
     }
 
     private boolean isLoggedIn() {
         return mPlayer != null && mPlayer.isLoggedIn();
     }
 
-    public void onLoginButtonClicked() {
-        if (!isLoggedIn()) {
-            Log.d(TAG, "Logging in");
-            openLoginWindow();
-        } else {
-            mPlayer.logout();
+
+    private void showToast(String text) {
+        if (mToast != null) {
+            mToast.cancel();
         }
+        mToast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     //   ____      _ _ _                _      __  __      _   _               _
@@ -278,27 +191,28 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoggedIn() {
-        Log.d("MainActivity", "User logged in");
+        Log.d(TAG, "User logged in");
+        showToast("Login Success!");
     }
 
     @Override
     public void onLoggedOut() {
-        Log.d("MainActivity", "User logged out");
+        Log.d(TAG, "User logged out");
     }
 
     @Override
     public void onLoginFailed(Error error) {
-        Log.d("MainActivity", "Login failed");
+        Log.d(TAG, "Login failed");
     }
 
     @Override
     public void onTemporaryError() {
-        Log.d("MainActivity", "Temporary error occurred");
+        Log.d(TAG, "Temporary error occurred");
     }
 
     @Override
     public void onConnectionMessage(String message) {
-        Log.d("MainActivity", "Received connection message: " + message);
+        Log.d(TAG, "Received connection message: " + message);
     }
 
     //  ____            _                   _   _
@@ -326,7 +240,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPlaybackEvent(PlayerEvent playerEvent) {
-        Log.d("MainActivity", "Playback event received: " + playerEvent.name());
+        Log.d(TAG, "Playback event received: " + playerEvent.name());
 
         switch (playerEvent) {
             // Handle event type as necessary
@@ -337,7 +251,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPlaybackError(Error error) {
-        Log.d("MainActivity", "Playback error received: " + error.name());
+        Log.d(TAG, "Playback error received: " + error.name());
         switch (error) {
             // Handle error type as necessary
             default:

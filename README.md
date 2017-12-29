@@ -13,7 +13,7 @@ You can follow the [Spotify Android SDK Tutorial](https://developer.spotify.com/
 ### Build .aar for auth library
 - Download and unzip
 - Remove the auth-sample directory since it is not needed to create .aar file
-- In the `\android-auth-1.0\settings.gradle` file, add include ':app'
+- In the `\android-auth-1.0\settings.gradle` file, include `':app'`
 - Create `\android-auth-1.0\local.properties` and add `sdk.dir=/Users/%YOUR_PC_USERNAME%/Library/Android/sdk` for path to the Android SDK
 - Run `./gradlew build` and grab an artifact from `auth-lib/build/outputs/aar/`.
 
