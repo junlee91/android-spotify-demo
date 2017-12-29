@@ -56,7 +56,10 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intent = new Intent(SplashActivity.this,
                             SpotifyLoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
                     startActivity(intent);
+                    overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.hold);
+
                     SplashActivity.this.finish();
                 } catch (InterruptedException e) {
                     // do nothing
