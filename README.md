@@ -30,9 +30,16 @@ echo -n password | shasum -a 1 | awk '{print $1}'
 - [Spotify Web API for Android](https://github.com/kaaes/spotify-web-api-android)
 - [Documentation](http://kaaes.github.io/spotify-web-api-android/)
 
+## ScalingLayout
+- Thanks to iammert for these awesome layouts 
+- Follow the instructions from [here](https://github.com/iammert/ScalingLayout)
 
 ## Dependency
 ```sh
+android{
+    vectorDrawables.useSupportLibrary = true
+}
+
 repositories {
     mavenCentral()
     flatDir {
@@ -46,6 +53,8 @@ dependencies {
 
     compile 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'
     compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
+    
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
+    compile 'com.github.iammert:ScalingLayout:1.1'  
 }
 ``` 
