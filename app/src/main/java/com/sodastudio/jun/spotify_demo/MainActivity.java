@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
 
     private String AUTH_TOKEN;
 
-    private SpotifyService spotifyService;
+    public static SpotifyService spotifyService;
 
     private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
         @Override
