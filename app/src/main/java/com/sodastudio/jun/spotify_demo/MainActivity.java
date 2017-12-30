@@ -118,46 +118,6 @@ public class MainActivity extends AppCompatActivity
         spotifyService = api.getService();
     }
 
-    /*
-    *
-    * TOKEN = response.getAccessToken();
-
-                    SpotifyApi api = new SpotifyApi();
-
-                    api.setAccessToken(TOKEN);
-
-                    SpotifyService spotifyService = api.getService();
-
-                    spotifyService.searchTracks("Maroon 5", new SpotifyCallback<TracksPager>() {
-                        @Override
-                        public void failure(SpotifyError spotifyError) {
-                            Log.d(TAG, "failed.. " + spotifyError.toString());
-                        }
-
-                        @Override
-                        public void success(TracksPager tracksPager, Response response) {
-                            // artist: Maroon 5
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).uri);              // music link
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).name);             // title
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).album.name);       // album name
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).album.images.get(0).url);  // album image
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).duration_ms);          // song duration
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(0).artists.get(0).name); // artists
-
-
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).uri);              // music link
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).name);             // title
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).album.name);       // album name
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).album.images.get(0).url);  // album image
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).duration_ms);          // song duration
-                            Log.d(TAG, "success! " + tracksPager.tracks.items.get(1).artists.get(0).name); // artists
-                        }
-                    });
-    *
-    *
-    * */
-
-
     //  _   _ ___   _____                 _
     // | | | |_ _| | ____|_   _____ _ __ | |_ ___
     // | | | || |  |  _| \ \ / / _ \ '_ \| __/ __|

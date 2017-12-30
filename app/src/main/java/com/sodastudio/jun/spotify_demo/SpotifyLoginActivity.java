@@ -89,7 +89,7 @@ public class SpotifyLoginActivity extends AppCompatActivity {
 
                     startActivity(intent);
 
-                    SpotifyLoginActivity.this.finish();
+                    destroy();
 
                     break;
 
@@ -117,4 +117,7 @@ public class SpotifyLoginActivity extends AppCompatActivity {
         }
     };
 
+    public void destroy(){
+        SpotifyLoginActivity.this.finish();
+    }
 }

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +19,15 @@ import android.widget.Toast;
 
 import com.sodastudio.jun.spotify_demo.R;
 import com.sodastudio.jun.spotify_demo.manager.SearchPager;
+import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
+import com.sodastudio.jun.spotify_demo.model.Music;
 
 import java.util.List;
 
 import iammert.com.view.scalinglib.ScalingLayout;
 import iammert.com.view.scalinglib.ScalingLayoutListener;
 import iammert.com.view.scalinglib.State;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -37,13 +42,21 @@ public class SearchFragment extends Fragment {
     private EditText editTextSearch;
     private ScalingLayout scalingLayout;
 
+    private RecyclerView mRecyclerView;
+    private TrackListAdapter mAdapter;
+
     private SearchPager mSearchPager;
     private SearchPager.CompleteListener mSearchListener;
+
+    private TrackListManager trackListManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSearchPager = SearchPager.getInstance(getContext());
+        setRetainInstance(true);
+
+        trackListManager = TrackListManager.getInstance();
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -53,10 +66,11 @@ public class SearchFragment extends Fragment {
         final RelativeLayout searchLayout = view.findViewById(R.id.searchLayout);
         final ImageButton searchButton = view.findViewById(R.id.search_text_button);
 
+        mRecyclerView = view.findViewById(R.id.track_list_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         editTextSearch = view.findViewById(R.id.editTextSearch);
-
         searchButton.setOnClickListener(mListener);
-
         scalingLayout = view.findViewById(R.id.scalingLayout);
 
         scalingLayout.setListener(new ScalingLayoutListener() {
@@ -153,14 +167,29 @@ public class SearchFragment extends Fragment {
                             @Override
                             public void onComplete(List<Track> items) {
 
+                                trackListManager.clearList();
+
                                 for(Track track : items){
-                                    Log.d(TAG, "success! link: " + track.uri);                     // music link
-                                    Log.d(TAG, "success! title: " + track.name);                    // title
-                                    Log.d(TAG, "success! album: " + track.album.name);              // album name
+                                    Log.d(TAG, "success! link: " + track.uri);                      // music link
+                                    Log.d(TAG, "success! title: " + track.name);                        // title
+                                    Log.d(TAG, "success! album: " + track.album.name);                  // album name
                                     Log.d(TAG, "success! album img: " + track.album.images.get(0).url); // album image
                                     Log.d(TAG, "success! duration: " + track.duration_ms);             // song duration
                                     Log.d(TAG, "success! artists: " + track.artists.get(0).name);     // artists
+
+                                    Music music = new Music(
+                                            track.uri,
+                                            track.name,
+                                            track.album.name,
+                                            track.album.images.get(0).url,
+                                            track.duration_ms,
+                                            track.artists.get(0).name
+                                    );
+
+                                    trackListManager.addTrack(music);
                                 }
+
+                                updateView();
                             }
 
                             @Override
@@ -177,4 +206,114 @@ public class SearchFragment extends Fragment {
         }
     };
 
+    private void updateView(){
+
+        mAdapter = new TrackListAdapter(trackListManager.getTrackLists());
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+
+    private class TrackListHolder extends RecyclerView.ViewHolder{
+
+        private Music music;
+        private TextView title_text;
+        private TextView artist_text;
+        private TextView album_text;
+        private ImageButton more_button;
+
+        private TrackListHolder(View itemView){
+            super(itemView);
+
+            title_text = itemView.findViewById(R.id.title_field);
+            artist_text = itemView.findViewById(R.id.artist_field);
+            album_text = itemView.findViewById(R.id.album_field);
+            more_button = itemView.findViewById(R.id.more_horiz);
+        }
+
+        private void bindMusic(Music m)
+        {
+            music = m;
+
+            String title = music.getTitle();
+            String album = music.getAlbum();
+
+            if(title.length() > 40){
+                title = title.substring(0, 40);
+                title += "...";
+            }
+
+            if(album.length() > 40){
+                album = album.substring(0,40);
+                album += "...";
+            }
+
+            title_text.setText(title);
+            artist_text.setText(music.getArtist());
+            album_text.setText(album);
+
+        }
+
+    }
+
+    private class TrackListAdapter extends RecyclerView.Adapter<TrackListHolder>{
+
+        private List<Music> musicList;
+        private TrackListAdapter(List<Music> list){
+            musicList = list;
+        }
+
+        @Override
+        public TrackListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
+            View view = layoutInflater.inflate(R.layout.music, parent, false);
+
+            return new TrackListHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(TrackListHolder holder, int position) {
+            Music music = musicList.get(position);
+
+            holder.bindMusic(music);
+        }
+
+        @Override
+        public int getItemCount() {
+            return musicList.size();
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
