@@ -15,19 +15,19 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.sodastudio.jun.spotify_demo.MainActivity;
 import com.sodastudio.jun.spotify_demo.R;
 import com.sodastudio.jun.spotify_demo.manager.SearchPager;
 import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
 import com.sodastudio.jun.spotify_demo.model.Music;
+import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.util.List;
 
 import iammert.com.view.scalinglib.ScalingLayout;
 import iammert.com.view.scalinglib.ScalingLayoutListener;
 import iammert.com.view.scalinglib.State;
-import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -170,12 +170,12 @@ public class SearchFragment extends Fragment {
                                 trackListManager.clearList();
 
                                 for(Track track : items){
-                                    Log.d(TAG, "success! link: " + track.uri);                      // music link
-                                    Log.d(TAG, "success! title: " + track.name);                        // title
-                                    Log.d(TAG, "success! album: " + track.album.name);                  // album name
-                                    Log.d(TAG, "success! album img: " + track.album.images.get(0).url); // album image
-                                    Log.d(TAG, "success! duration: " + track.duration_ms);             // song duration
-                                    Log.d(TAG, "success! artists: " + track.artists.get(0).name);     // artists
+                                    //Log.d(TAG, "success! link: " + track.uri);                      // music link
+                                    //Log.d(TAG, "success! title: " + track.name);                        // title
+                                    //Log.d(TAG, "success! album: " + track.album.name);                  // album name
+                                    //Log.d(TAG, "success! album img: " + track.album.images.get(0).url); // album image
+                                    //Log.d(TAG, "success! duration: " + track.duration_ms);             // song duration
+                                    //Log.d(TAG, "success! artists: " + track.artists.get(0).name);     // artists
 
                                     Music music = new Music(
                                             track.uri,
@@ -221,6 +221,8 @@ public class SearchFragment extends Fragment {
         private TextView album_text;
         private ImageButton more_button;
 
+        private SpotifyPlayer mPlayer = MainActivity.mPlayer;
+
         private TrackListHolder(View itemView){
             super(itemView);
 
@@ -228,6 +230,18 @@ public class SearchFragment extends Fragment {
             artist_text = itemView.findViewById(R.id.artist_field);
             album_text = itemView.findViewById(R.id.album_field);
             more_button = itemView.findViewById(R.id.more_horiz);
+
+            more_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // TODO: To be Changed
+                    if(mPlayer.isLoggedIn())
+                    {
+                        mPlayer.playUri(null, music.getUri(), 0, 0);
+                    }
+                }
+            });
         }
 
         private void bindMusic(Music m)

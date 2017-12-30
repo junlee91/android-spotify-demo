@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
     // |_|   |_|\___|_|\__,_|___/
     //
 
-    private SpotifyPlayer mPlayer;
+    public static SpotifyPlayer mPlayer;
     private PlaybackState mCurrentPlaybackState;
 
     private Toast mToast;
