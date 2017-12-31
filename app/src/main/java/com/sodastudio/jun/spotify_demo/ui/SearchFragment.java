@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
@@ -28,7 +29,6 @@ import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
 import com.sodastudio.jun.spotify_demo.model.Music;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import iammert.com.view.scalinglib.ScalingLayout;
@@ -60,6 +60,8 @@ public class SearchFragment extends Fragment{
     private TrackListManager trackListManager;
     private PlaybackManager playbackManager;
 
+    private LinearLayoutManager layoutManager;
+
     public static SearchFragment getFragmentInstance(FragmentManager fm, String tag){
         SearchFragment fragment = (SearchFragment)fm.findFragmentByTag(tag);
 
@@ -75,7 +77,6 @@ public class SearchFragment extends Fragment{
         super.onCreate(savedInstanceState);
         mSearchPager = SearchPager.getInstance(getContext());
         setRetainInstance(true);
-
         trackListManager = TrackListManager.getInstance();
         playbackManager = PlaybackManager.getInstance();
     }
@@ -88,7 +89,8 @@ public class SearchFragment extends Fragment{
         final ImageButton searchButton = view.findViewById(R.id.search_text_button);
 
         mRecyclerView = view.findViewById(R.id.track_list_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
 
         editTextSearch = view.findViewById(R.id.editTextSearch);
         searchButton.setOnClickListener(mListener);
@@ -244,7 +246,7 @@ public class SearchFragment extends Fragment{
 
         private SpotifyPlayer mPlayer = MainActivity.mPlayer;
 
-        private TrackListHolder(View itemView){
+        private TrackListHolder(final View itemView){
             super(itemView);
 
             title_text = itemView.findViewById(R.id.title_field);
@@ -361,6 +363,45 @@ public class SearchFragment extends Fragment{
         public int getItemCount() {
             return musicList.size();
         }
+
+    }
+
+    Parcelable state;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+
+        state = layoutManager.onSaveInstanceState();
+
+        playbackManager = PlaybackManager.getInstance();
+        playbackManager.setState(state);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState");
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "onViewCreated");
+
+        playbackManager = PlaybackManager.getInstance();
+        state = playbackManager.getState();
+
+        if(state != null){
+            layoutManager.onRestoreInstanceState(state);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
     }
 }
 

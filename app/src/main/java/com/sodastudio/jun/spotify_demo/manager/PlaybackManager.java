@@ -1,5 +1,7 @@
 package com.sodastudio.jun.spotify_demo.manager;
 
+import android.os.Parcelable;
+
 import com.sodastudio.jun.spotify_demo.model.Music;
 
 /**
@@ -11,6 +13,7 @@ public class PlaybackManager {
     private static PlaybackManager manager;
 
     private Music music;
+    private Parcelable state;
 
     public static PlaybackManager getInstance(){
         if(manager == null){
@@ -26,5 +29,13 @@ public class PlaybackManager {
 
     public void setMusic(Music music) {
         this.music = music;
+    }
+
+    public Parcelable getState() {
+        return state;
+    }
+
+    public void setState(Parcelable state) {
+        this.state = state;
     }
 }
