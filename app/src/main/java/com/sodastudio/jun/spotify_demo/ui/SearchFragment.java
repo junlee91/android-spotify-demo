@@ -1,6 +1,7 @@
 package com.sodastudio.jun.spotify_demo.ui;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.sodastudio.jun.spotify_demo.MainActivity;
 import com.sodastudio.jun.spotify_demo.R;
+import com.sodastudio.jun.spotify_demo.TrackDetailActivity;
 import com.sodastudio.jun.spotify_demo.manager.SearchPager;
 import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
 import com.sodastudio.jun.spotify_demo.model.Music;
@@ -37,6 +39,8 @@ import kaaes.spotify.webapi.android.models.Track;
 public class SearchFragment extends Fragment {
 
     private static final String TAG = "Spotify SearchFragment";
+
+    public static final String DETAIL_MUSIC = "Detail Music";
 
     private TextView textViewSearch;
     private EditText editTextSearch;
@@ -236,10 +240,13 @@ public class SearchFragment extends Fragment {
                 public void onClick(View view) {
 
                     // TODO: To be Changed
-                    if(mPlayer.isLoggedIn())
-                    {
-                        mPlayer.playUri(null, music.getUri(), 0, 0);
-                    }
+                    Intent intent = new Intent(getContext(), TrackDetailActivity.class);
+
+                    Bundle args = new Bundle();
+                    args.putParcelable(DETAIL_MUSIC, music);
+
+                    intent.putExtras(args);
+                    startActivity(intent);
                 }
             });
         }

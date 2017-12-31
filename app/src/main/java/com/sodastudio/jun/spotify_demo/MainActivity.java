@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity
         AUTH_TOKEN = getIntent().getStringExtra(SpotifyLoginActivity.AUTH_TOKEN);
 
         onAuthenticationComplete(AUTH_TOKEN);
-        updateView();
     }
 
     private void onAuthenticationComplete(final String auth_token) {
@@ -93,8 +92,6 @@ public class MainActivity extends AppCompatActivity
 
                     Log.d(TAG, "AccessToken: " + auth_token);
 
-                    // Trigger UI refresh
-                    updateView();
                     // Set API
                     setServiceAPI();
                 }
@@ -125,11 +122,6 @@ public class MainActivity extends AppCompatActivity
     //  \___/|___| |_____| \_/ \___|_| |_|\__|___/
     //
 
-    private void updateView() {
-        boolean loggedIn = isLoggedIn();
-
-
-    }
 
     private boolean isLoggedIn() {
         return mPlayer != null && mPlayer.isLoggedIn();
