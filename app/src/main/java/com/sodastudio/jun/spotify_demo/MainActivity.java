@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.sodastudio.jun.spotify_demo.ui.MainFragment;
+import com.sodastudio.jun.spotify_demo.ui.SearchFragment;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     //
 
     public static SpotifyPlayer mPlayer;
-    private PlaybackState mCurrentPlaybackState;
+    public static PlaybackState mCurrentPlaybackState;
 
     private Toast mToast;
 
@@ -49,17 +50,12 @@ public class MainActivity extends AppCompatActivity
 
     public static SpotifyService spotifyService;
 
-    private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
-        @Override
-        public void onSuccess() {
-            Log.d(TAG, "Ok");
-        }
+    OnPlaybackListener listener;
 
-        @Override
-        public void onError(Error error) {
-            Log.e(TAG, "Error: " + error);
-        }
-    };
+    public interface OnPlaybackListener{
+        void Play();
+        void Finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +68,7 @@ public class MainActivity extends AppCompatActivity
         AUTH_TOKEN = getIntent().getStringExtra(SpotifyLoginActivity.AUTH_TOKEN);
 
         onAuthenticationComplete(AUTH_TOKEN);
+
     }
 
     private void onAuthenticationComplete(final String auth_token) {
@@ -188,16 +185,32 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
         Spotify.destroyPlayer(this);
         super.onDestroy();
+    }
+
+    public void setListener(OnPlaybackListener lis){
+        listener = lis;
     }
 
     @Override
     public void onPlaybackEvent(PlayerEvent playerEvent) {
         Log.d(TAG, "Playback event received: " + playerEvent.name());
 
-        switch (playerEvent) {
+        mCurrentPlaybackState = mPlayer.getPlaybackState();
+
+        switch (playerEvent.name()) {
             // Handle event type as necessary
+
+            case "kSpPlaybackNotifyPlay":
+                listener.Play();
+                break;
+
+            case "kSpPlaybackNotifyPause":
+                listener.Finish();
+                break;
+
             default:
                 break;
         }

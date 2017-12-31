@@ -1,6 +1,7 @@
 package com.sodastudio.jun.spotify_demo.ui;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -36,7 +37,7 @@ import kaaes.spotify.webapi.android.models.Track;
  * Created by jun on 12/28/17.
  */
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment{
 
     private static final String TAG = "Spotify SearchFragment";
 
@@ -51,6 +52,7 @@ public class SearchFragment extends Fragment {
 
     private SearchPager mSearchPager;
     private SearchPager.CompleteListener mSearchListener;
+    private MainActivity.OnPlaybackListener mPlaybackListener;
 
     private TrackListManager trackListManager;
 
@@ -147,7 +149,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
-
+        updateView();
         return view;
     }
 
@@ -216,8 +218,8 @@ public class SearchFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-
-    private class TrackListHolder extends RecyclerView.ViewHolder{
+    private class TrackListHolder extends RecyclerView.ViewHolder
+    {
 
         private Music music;
         private TextView title_text;
@@ -239,7 +241,6 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    // TODO: To be Changed
                     Intent intent = new Intent(getContext(), TrackDetailActivity.class);
 
                     Bundle args = new Bundle();
@@ -247,6 +248,32 @@ public class SearchFragment extends Fragment {
 
                     intent.putExtras(args);
                     startActivity(intent);
+                }
+            });
+
+            title_text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    mPlayer.playUri(null, music.getUri(), 0 , 0);
+                    music.setPlaying(true);
+
+                    mPlaybackListener = new MainActivity.OnPlaybackListener() {
+                        @Override
+                        public void Play() {
+                            if(music.isPlaying())
+                                title_text.setTextColor(getResources().getColor(R.color.colorAccent, null));
+                        }
+
+                        @Override
+                        public void Finish() {
+                            title_text.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                            music.setPlaying(false);
+                        }
+                    };
+
+                    ((MainActivity)getActivity()).setListener(mPlaybackListener);
+
                 }
             });
         }
@@ -272,8 +299,13 @@ public class SearchFragment extends Fragment {
             artist_text.setText(music.getArtist());
             album_text.setText(album);
 
-        }
+            if(music.isPlaying())
+                title_text.setTextColor(getResources().getColor(R.color.colorAccent, null));
+            else
+                title_text.setTextColor(getResources().getColor(R.color.colorWhite, null));
 
+
+        }
     }
 
     private class TrackListAdapter extends RecyclerView.Adapter<TrackListHolder>{

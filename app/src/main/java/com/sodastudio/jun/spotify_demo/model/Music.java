@@ -19,6 +19,7 @@ public class Music implements Parcelable
     private String album_image;
     private long duration;
     private String artist;
+    private boolean playing;
 
     public Music(String u, String t, String a, String a_img, long dura, String art){
         uri = u;
@@ -27,9 +28,10 @@ public class Music implements Parcelable
         album_image = a_img;
         duration = dura;
         artist = art;
+        playing = false;
     }
 
-    protected Music(Parcel in) {
+    private Music(Parcel in) {
         uri = in.readString();
         title = in.readString();
         album = in.readString();
@@ -72,6 +74,14 @@ public class Music implements Parcelable
 
     public String getArtist() {
         return artist;
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
     }
 
     @Override

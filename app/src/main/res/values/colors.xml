@@ -12,4 +12,6 @@
     <color name="colorTopHeaderBar">#191919</color>
     <color name="colorBottomNavBar">#282828</color>
     <color name="colorNavIcon">#ABABAB</color>
+
+    <color name="colorWhite">#ffffff</color>
 </resources>
