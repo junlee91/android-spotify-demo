@@ -1,6 +1,7 @@
 package com.sodastudio.jun.spotify_demo.ui;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
 import com.sodastudio.jun.spotify_demo.model.Music;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import iammert.com.view.scalinglib.ScalingLayout;
@@ -55,6 +57,16 @@ public class SearchFragment extends Fragment{
     private MainActivity.OnPlaybackListener mPlaybackListener;
 
     private TrackListManager trackListManager;
+
+    public static SearchFragment getFragmentInstance(FragmentManager fm, String tag){
+        SearchFragment fragment = (SearchFragment)fm.findFragmentByTag(tag);
+
+        if(fragment == null){
+            fragment = new SearchFragment();
+            fm.beginTransaction().replace(R.id.fragment, fragment, tag).commitAllowingStateLoss();
+        }
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -214,13 +226,16 @@ public class SearchFragment extends Fragment{
 
     private void updateView(){
 
-        mAdapter = new TrackListAdapter(trackListManager.getTrackLists());
+        if(mAdapter == null)
+            mAdapter = new TrackListAdapter(trackListManager.getTrackLists());
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    private WeakReference<TextView> prevPlayingView;
+    private WeakReference<Music> prevMusic;
+
     private class TrackListHolder extends RecyclerView.ViewHolder
     {
-
         private Music music;
         private TextView title_text;
         private TextView artist_text;
@@ -255,20 +270,42 @@ public class SearchFragment extends Fragment{
                 @Override
                 public void onClick(View view) {
 
+                    if(music.isPlaying()) return;
+
                     mPlayer.playUri(null, music.getUri(), 0 , 0);
                     music.setPlaying(true);
+
+                    if(prevPlayingView != null && prevMusic != null) {
+
+                        TextView playingView = prevPlayingView.get();
+                        Music playingMusic = prevMusic.get();
+
+                        Log.d(TAG, "was playing: " + playingMusic.getTitle());
+
+                        playingView.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                        playingMusic.setPlaying(false);
+                    }
+
+                    prevPlayingView = new WeakReference<>(title_text);
+                    prevMusic = new WeakReference<>(music);
 
                     mPlaybackListener = new MainActivity.OnPlaybackListener() {
                         @Override
                         public void Play() {
-                            if(music.isPlaying())
+                            if(music.isPlaying()) {
                                 title_text.setTextColor(getResources().getColor(R.color.colorAccent, null));
+                            }
+                            mAdapter.notifyDataSetChanged();
                         }
 
                         @Override
                         public void Finish() {
-                            title_text.setTextColor(getResources().getColor(R.color.colorWhite, null));
-                            music.setPlaying(false);
+                            TextView playingView = prevPlayingView.get();
+                            Music playingMusic = prevMusic.get();
+
+                            playingView.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                            playingMusic.setPlaying(false);
+                            mAdapter.notifyDataSetChanged();
                         }
                     };
 
@@ -337,7 +374,6 @@ public class SearchFragment extends Fragment{
             return musicList.size();
         }
     }
-
 }
 
 

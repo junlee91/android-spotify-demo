@@ -68,7 +68,8 @@ public class MainFragment extends Fragment {
                     break;
                 case R.id.nav_search:
                     Log.d(TAG, "SEARCH");
-                    manager.beginTransaction().replace(R.id.fragment, new SearchFragment()).commit();
+                    //manager.beginTransaction().replace(R.id.fragment, new SearchFragment()).commit();
+                    SearchFragment.getFragmentInstance(manager, "SearchFragment");
                     break;
                 case R.id.nav_radio:
                     Log.d(TAG, "RADIO");
