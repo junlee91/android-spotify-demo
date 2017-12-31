@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.sodastudio.jun.spotify_demo.MainActivity;
 import com.sodastudio.jun.spotify_demo.R;
 import com.sodastudio.jun.spotify_demo.TrackDetailActivity;
+import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
 import com.sodastudio.jun.spotify_demo.manager.SearchPager;
 import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
 import com.sodastudio.jun.spotify_demo.model.Music;
@@ -57,6 +58,7 @@ public class SearchFragment extends Fragment{
     private MainActivity.OnPlaybackListener mPlaybackListener;
 
     private TrackListManager trackListManager;
+    private PlaybackManager playbackManager;
 
     public static SearchFragment getFragmentInstance(FragmentManager fm, String tag){
         SearchFragment fragment = (SearchFragment)fm.findFragmentByTag(tag);
@@ -75,6 +77,7 @@ public class SearchFragment extends Fragment{
         setRetainInstance(true);
 
         trackListManager = TrackListManager.getInstance();
+        playbackManager = PlaybackManager.getInstance();
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -231,9 +234,6 @@ public class SearchFragment extends Fragment{
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private WeakReference<TextView> prevPlayingView;
-    private WeakReference<Music> prevMusic;
-
     private class TrackListHolder extends RecyclerView.ViewHolder
     {
         private Music music;
@@ -266,51 +266,39 @@ public class SearchFragment extends Fragment{
                 }
             });
 
+
+            mPlaybackListener = new MainActivity.OnPlaybackListener() {
+                @Override
+                public void Play(Music playingMusic) {
+                    playingMusic.setPlaying(true);
+                    mAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void Finish(Music finishMusic) {
+                    finishMusic.setPlaying(false);
+                    mAdapter.notifyDataSetChanged();
+                }
+            };
+
+
             title_text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     if(music.isPlaying()) return;
 
-                    mPlayer.playUri(null, music.getUri(), 0 , 0);
-                    music.setPlaying(true);
+                    playbackManager = PlaybackManager.getInstance();
 
-                    if(prevPlayingView != null && prevMusic != null) {
+                    Music prevMusic = playbackManager.getMusic();
+                    if(prevMusic != null)
+                        prevMusic.setPlaying(false);
 
-                        TextView playingView = prevPlayingView.get();
-                        Music playingMusic = prevMusic.get();
+                    mPlayer.playUri(null, music.getUri(), 0, 0);
 
-                        Log.d(TAG, "was playing: " + playingMusic.getTitle());
+                    playbackManager.setMusic(music);
 
-                        playingView.setTextColor(getResources().getColor(R.color.colorWhite, null));
-                        playingMusic.setPlaying(false);
-                    }
-
-                    prevPlayingView = new WeakReference<>(title_text);
-                    prevMusic = new WeakReference<>(music);
-
-                    mPlaybackListener = new MainActivity.OnPlaybackListener() {
-                        @Override
-                        public void Play() {
-                            if(music.isPlaying()) {
-                                title_text.setTextColor(getResources().getColor(R.color.colorAccent, null));
-                            }
-                            mAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void Finish() {
-                            TextView playingView = prevPlayingView.get();
-                            Music playingMusic = prevMusic.get();
-
-                            playingView.setTextColor(getResources().getColor(R.color.colorWhite, null));
-                            playingMusic.setPlaying(false);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    };
-
-                    ((MainActivity)getActivity()).setListener(mPlaybackListener);
-
+                    ((MainActivity)getActivity()).setListener(mPlaybackListener, music);
                 }
             });
         }

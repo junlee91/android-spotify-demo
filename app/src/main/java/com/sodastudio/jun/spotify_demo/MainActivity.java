@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.sodastudio.jun.spotify_demo.model.Music;
 import com.sodastudio.jun.spotify_demo.ui.MainFragment;
 import com.sodastudio.jun.spotify_demo.ui.SearchFragment;
 import com.spotify.sdk.android.player.Config;
@@ -53,8 +54,8 @@ public class MainActivity extends AppCompatActivity
     OnPlaybackListener listener;
 
     public interface OnPlaybackListener{
-        void Play();
-        void Finish();
+        void Play(Music music);
+        void Finish(Music music);
     }
 
     @Override
@@ -190,8 +191,11 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    public void setListener(OnPlaybackListener lis){
+    private Music music;
+
+    public void setListener(OnPlaybackListener lis, Music mus){
         listener = lis;
+        music = mus;
     }
 
     @Override
@@ -204,11 +208,11 @@ public class MainActivity extends AppCompatActivity
             // Handle event type as necessary
 
             case "kSpPlaybackNotifyPlay":
-                listener.Play();
+                listener.Play(music);
                 break;
 
             case "kSpPlaybackNotifyPause":
-                listener.Finish();
+                listener.Finish(music);
                 break;
 
             default:
