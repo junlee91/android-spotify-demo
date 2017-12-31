@@ -53,6 +53,7 @@
                     android:background="@drawable/ic_home_black_24dp"/>
 
                 <TextView
+                    android:id="@+id/nav_home_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="12sp"
@@ -77,6 +78,7 @@
                     android:background="@drawable/ic_open_in_browser_black_24dp"/>
 
                 <TextView
+                    android:id="@+id/nav_browse_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="12sp"
@@ -101,6 +103,7 @@
                     android:background="@drawable/ic_search_black_24dp"/>
 
                 <TextView
+                    android:id="@+id/nav_search_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="12sp"
@@ -125,6 +128,7 @@
                     android:background="@drawable/ic_radio_black_24dp"/>
 
                 <TextView
+                    android:id="@+id/nav_radio_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="12sp"
@@ -149,6 +153,7 @@
                     android:background="@drawable/ic_library_music_black_24dp"/>
 
                 <TextView
+                    android:id="@+id/nav_library_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="12sp"
