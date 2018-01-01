@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sodastudio.jun.spotify_demo.model.Music;
-import com.sodastudio.jun.spotify_demo.ui.SearchFragment;
+import com.sodastudio.jun.spotify_demo.ui.SearchResultFragment;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -24,7 +24,7 @@ public class TrackDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_detail);
 
-        detailMusic = getIntent().getParcelableExtra(SearchFragment.DETAIL_MUSIC);
+        detailMusic = getIntent().getParcelableExtra(SearchResultFragment.DETAIL_MUSIC);
 
         final ImageView albumImage = findViewById(R.id.detail_album_image_field);
         final TextView titleView = findViewById(R.id.detail_track_title_field);
