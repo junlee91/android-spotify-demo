@@ -1,7 +1,9 @@
 package com.sodastudio.jun.spotify_demo.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -33,12 +35,15 @@ public class SearchFragment extends Fragment{
     private EditText editTextSearch;
     private ScalingLayout scalingLayout;
 
+    @SuppressLint("ResourceType")
     public static SearchFragment getFragmentInstance(FragmentManager fm, String tag){
         SearchFragment fragment = (SearchFragment)fm.findFragmentByTag(tag);
 
         if(fragment == null){
             fragment = new SearchFragment();
-            fm.beginTransaction().replace(R.id.fragment, fragment, tag).commitAllowingStateLoss();
+
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.fragment, fragment, tag).commitAllowingStateLoss();
         }
         return fragment;
     }
@@ -148,10 +153,13 @@ public class SearchFragment extends Fragment{
                     } else {
 
                         FragmentManager manager = getFragmentManager();
+                        FragmentTransaction ft = manager.beginTransaction();
 
-                        manager.beginTransaction().add(R.id.fragment, SearchResultFragment.newInstance(query))
+                        ft.add(R.id.fragment, SearchResultFragment.newInstance(query))
                                 .addToBackStack(TAG)
                                 .commit();
+
+
 
                         textViewSearch.setText(query);
                     }

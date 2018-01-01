@@ -35,6 +35,8 @@
                 app:title="Maroon 5"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
+
+
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
