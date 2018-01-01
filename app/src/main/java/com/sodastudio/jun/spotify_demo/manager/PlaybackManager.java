@@ -14,6 +14,7 @@ public class PlaybackManager {
 
     private Music music;
     private Parcelable state;
+    private boolean SearchResultFragmentAdded = false;
 
     public static PlaybackManager getInstance(){
         if(manager == null){
@@ -37,5 +38,13 @@ public class PlaybackManager {
 
     public void setState(Parcelable state) {
         this.state = state;
+    }
+
+    public boolean isSearchResultFragmentAdded() {
+        return SearchResultFragmentAdded;
+    }
+
+    public void setSearchResultFragmentAdded(boolean searchResultFragmentAdded) {
+        SearchResultFragmentAdded = searchResultFragmentAdded;
     }
 }

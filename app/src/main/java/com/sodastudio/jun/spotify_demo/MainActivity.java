@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
 import com.sodastudio.jun.spotify_demo.model.Music;
 import com.sodastudio.jun.spotify_demo.ui.MainFragment;
 import com.sodastudio.jun.spotify_demo.ui.SearchFragment;
@@ -230,5 +231,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        PlaybackManager playbackManager = PlaybackManager.getInstance();
+        playbackManager.setSearchResultFragmentAdded(false);
+    }
 }
 

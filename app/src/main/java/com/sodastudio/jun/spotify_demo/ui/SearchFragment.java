@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sodastudio.jun.spotify_demo.R;
+import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
 
 import iammert.com.view.scalinglib.ScalingLayout;
 import iammert.com.view.scalinglib.ScalingLayoutListener;
@@ -34,6 +35,8 @@ public class SearchFragment extends Fragment{
     private TextView textViewSearch;
     private EditText editTextSearch;
     private ScalingLayout scalingLayout;
+
+    FragmentManager fragmentManager;
 
     @SuppressLint("ResourceType")
     public static SearchFragment getFragmentInstance(FragmentManager fm, String tag){
@@ -54,6 +57,18 @@ public class SearchFragment extends Fragment{
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+
+        // check if the previous state is SearchResultFragment
+        PlaybackManager manager = PlaybackManager.getInstance();
+        if(manager.isSearchResultFragmentAdded())
+        {
+            fragmentManager = getFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.add(R.id.fragment, SearchResultFragment.newInstance("empty"))
+                    .addToBackStack(TAG)
+                    .commit();
+        }
+
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         textViewSearch = view.findViewById(R.id.textViewSearch);
@@ -152,9 +167,8 @@ public class SearchFragment extends Fragment{
                         textViewSearch.setText("Search");
                     } else {
 
-                        FragmentManager manager = getFragmentManager();
-                        FragmentTransaction ft = manager.beginTransaction();
-
+                        fragmentManager = getFragmentManager();
+                        FragmentTransaction ft = fragmentManager.beginTransaction();
                         ft.add(R.id.fragment, SearchResultFragment.newInstance(query))
                                 .addToBackStack(TAG)
                                 .commit();

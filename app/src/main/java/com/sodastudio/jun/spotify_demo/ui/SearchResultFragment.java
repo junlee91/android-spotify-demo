@@ -69,6 +69,10 @@ public class SearchResultFragment extends Fragment{
         setRetainInstance(true);
         trackListManager = TrackListManager.getInstance();
         playbackManager = PlaybackManager.getInstance();
+
+        playbackManager.setSearchResultFragmentAdded(true);
+
+        Log.d(TAG, "onCreate");
     }
 
     @Nullable
@@ -81,8 +85,17 @@ public class SearchResultFragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_search_result, container, false);
 
-        mRecyclerView = view.findViewById(R.id.track_list_recycler_view);
+
+        playbackManager = PlaybackManager.getInstance();
+        state = playbackManager.getState();
+
         layoutManager = new LinearLayoutManager(getActivity());
+
+        if(state != null){
+            layoutManager.onRestoreInstanceState(state);
+        }
+
+        mRecyclerView = view.findViewById(R.id.track_list_recycler_view);
         mRecyclerView.setLayoutManager(layoutManager);
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -90,7 +103,10 @@ public class SearchResultFragment extends Fragment{
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        queryData();
+        if(!query.equals("empty"))
+            queryData();
+        else
+            updateView();
 
         return view;
     }
@@ -291,19 +307,15 @@ public class SearchResultFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d(TAG, "onViewCreated");
-
-        playbackManager = PlaybackManager.getInstance();
-        state = playbackManager.getState();
-
-        if(state != null){
-            layoutManager.onRestoreInstanceState(state);
-        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         Log.d(TAG, "onDestroyView");
+
+        //playbackManager = PlaybackManager.getInstance();
+        //playbackManager.setSearchResultFragmentAdded(false);
     }
 
 
