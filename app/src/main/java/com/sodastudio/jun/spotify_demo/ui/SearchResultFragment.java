@@ -2,6 +2,7 @@ package com.sodastudio.jun.spotify_demo.ui;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sodastudio.jun.spotify_demo.MainActivity;
@@ -25,6 +27,8 @@ import com.sodastudio.jun.spotify_demo.model.Music;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.SpotifyPlayer;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
@@ -41,6 +45,9 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
     public static final String DETAIL_MUSIC = "Detail Music";
 
     private String query;
+
+    private Toolbar toolbar;
+    private ImageView background_album;
 
     private RecyclerView mRecyclerView;
     private TrackListAdapter mAdapter;
@@ -102,15 +109,19 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
         mRecyclerView = view.findViewById(R.id.track_list_recycler_view);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        toolbar = view.findViewById(R.id.toolbar);
         ((MainActivity)getActivity()).setSupportActionBar(toolbar);
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        if(!query.equals("empty"))
+        background_album = view.findViewById(R.id.background_album_field);
+
+        if(!query.equals("empty")) {
             queryData();
+        }
         else
             updateView();
+
 
         return view;
     }
@@ -161,14 +172,29 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
         if(mAdapter == null)
             mAdapter = new TrackListAdapter(trackListManager.getTrackLists());
         mRecyclerView.setAdapter(mAdapter);
+
+        toolbar.setTitle(trackListManager.getTrackLists().get(0).getArtist());
+
+        String img_url = trackListManager.getTrackLists().get(0).getAlbum_image();
+
+        Picasso.with(getContext())
+                .load(img_url)
+                .transform(new Transformation() {
+                    @Override
+                    public Bitmap transform(Bitmap source) {
+                        final Bitmap copy = source.copy(source.getConfig(), true);
+                        source.recycle();
+
+                        return copy;
+                    }
+
+                    @Override
+                    public String key() {
+                        return query;
+                    }
+                })
+                .into(background_album);
     }
-
-
-//    OnPlaybackListener listener;
-//    public interface OnPlaybackListener{
-//        void Play(Music music);
-//        void Finish(Music music);
-//    }
 
 
     @Override

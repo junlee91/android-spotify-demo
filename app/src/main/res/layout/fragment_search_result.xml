@@ -19,12 +19,11 @@
             app:titleEnabled="false">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/background_album_field"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 app:layout_collapseMode="parallax"
-                android:scaleType="centerCrop"
-                android:src="@drawable/maroon_sample_album"/>
+                android:scaleType="centerCrop"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -32,7 +31,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="Maroon 5"/>
+                app:title=""/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
