@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
         PlaybackManager playbackManager = PlaybackManager.getInstance();
         playbackManager.setSearchResultFragmentAdded(false);
     }

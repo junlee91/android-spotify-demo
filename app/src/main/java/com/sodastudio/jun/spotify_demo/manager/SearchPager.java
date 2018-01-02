@@ -5,12 +5,18 @@ import android.util.Log;
 
 import com.sodastudio.jun.spotify_demo.MainActivity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.Recommendations;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit.client.Response;
@@ -76,6 +82,15 @@ public class SearchPager {
                 listener.onComplete(artist.images.get(0).url);
             }
         });
+
     }
+
+    public void getMyPlayList(){
+
+        Map<String, Object> options = new HashMap<>();
+
+
+    }
+
 
 }

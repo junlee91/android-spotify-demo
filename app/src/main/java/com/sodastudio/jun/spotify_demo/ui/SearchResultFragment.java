@@ -112,9 +112,18 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
         mRecyclerView.setLayoutManager(layoutManager);
 
         toolbar = view.findViewById(R.id.toolbar);
-        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
-        ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((MainActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp, null));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().beginTransaction().detach(SearchResultFragment.this).commit();
+
+                PlaybackManager playbackManager = PlaybackManager.getInstance();
+                playbackManager.setSearchResultFragmentAdded(false);
+            }
+        });
 
         background_album = view.findViewById(R.id.background_album_field);
 
@@ -126,6 +135,8 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
 
         return view;
     }
+
+
 
     private void queryData(){
 
@@ -173,6 +184,8 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
     private void updateView(){
 
         List<Music> mList = trackListManager.getTrackLists();
+
+        if(mList.size() == 0) return;
 
         if(mAdapter == null)
             mAdapter = new TrackListAdapter(mList);
@@ -232,8 +245,11 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
                 String album = mPlayer.getMetadata().currentTrack.albumName;
 
                 Music music = TrackListManager.getInstance().findCurrentMusic(title, album);
-                music.setPlaying(false);
-                mAdapter.notifyDataSetChanged();
+
+                if(music != null)
+                    music.setPlaying(false);
+                if(mAdapter != null)
+                    mAdapter.notifyDataSetChanged();
 
                 break;
 
