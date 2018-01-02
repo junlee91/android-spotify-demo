@@ -41,6 +41,7 @@ dependencies {
     compile 'com.github.iammert:ScalingLayout:1.1'
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 
     compile 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'
     compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'

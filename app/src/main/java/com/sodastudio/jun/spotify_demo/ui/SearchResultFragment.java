@@ -175,6 +175,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
 
         if(mAdapter == null)
             mAdapter = new TrackListAdapter(mList);
+
         mRecyclerView.setAdapter(mAdapter);
 
         toolbar.setTitle(mList.get(0).getArtist());
