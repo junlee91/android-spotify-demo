@@ -1,36 +1,22 @@
 package com.sodastudio.jun.spotify_demo;
 
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
-import com.sodastudio.jun.spotify_demo.model.Music;
 import com.sodastudio.jun.spotify_demo.ui.MainFragment;
-import com.sodastudio.jun.spotify_demo.ui.SearchFragment;
-import com.sodastudio.jun.spotify_demo.ui.SearchResultFragment;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.PlaybackState;
-import com.spotify.sdk.android.player.Player;
-import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyCallback;
-import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Album;
-import kaaes.spotify.webapi.android.models.TracksPager;
-import retrofit.client.Response;
-
 public class MainActivity extends AppCompatActivity
     implements ConnectionStateCallback
 {
@@ -186,48 +172,6 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-//    private Music music;
-//
-//    public void setListener(OnPlaybackListener lis, Music mus){
-//        listener = lis;
-//        music = mus;
-//    }
-
-
-
-//    @Override
-//    public void onPlaybackEvent(PlayerEvent playerEvent) {
-//        Log.d(TAG, "Playback event received: " + playerEvent.name());
-//
-//        mCurrentPlaybackState = mPlayer.getPlaybackState();
-//
-//        switch (playerEvent.name()) {
-//            // Handle event type as necessary
-//
-//            case "kSpPlaybackNotifyPlay":
-//                //Log.d(TAG, "Playback event received: " + playerEvent.name());
-//                listener.Play(music);
-//                break;
-//
-//            case "kSpPlaybackNotifyPause":
-//                //Log.d(TAG, "Playback event received: " + playerEvent.name());
-//                listener.Finish(music);
-//                break;
-//
-//            default:
-//                break;
-//        }
-//    }
-//
-//    @Override
-//    public void onPlaybackError(Error error) {
-//        Log.d(TAG, "Playback error received: " + error.name());
-//        switch (error) {
-//            // Handle error type as necessary
-//            default:
-//                break;
-//        }
-//    }
 
     @Override
     public void onBackPressed() {

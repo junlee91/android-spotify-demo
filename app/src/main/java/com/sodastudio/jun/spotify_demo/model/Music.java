@@ -19,9 +19,10 @@ public class Music implements Parcelable
     private String album_image;
     private long duration;
     private String artist;
+    private String artist_id;
     private boolean playing;
 
-    public Music(String i, String u, String t, String a, String a_img, long dura, String art){
+    public Music(String i, String u, String t, String a, String a_img, long dura, String art, String art_id){
         id = i;
         uri = u;
         title = t;
@@ -29,6 +30,7 @@ public class Music implements Parcelable
         album_image = a_img;
         duration = dura;
         artist = art;
+        artist_id = art_id;
         playing = false;
     }
 
@@ -52,6 +54,10 @@ public class Music implements Parcelable
             return new Music[size];
         }
     };
+
+    public String getArtist_id() {
+        return artist_id;
+    }
 
     public String getId() { return id; }
 

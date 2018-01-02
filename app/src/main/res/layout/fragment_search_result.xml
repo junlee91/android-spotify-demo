@@ -20,8 +20,9 @@
 
             <ImageView
                 android:id="@+id/background_album_field"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_collapseMode="parallax"
                 android:scaleType="centerCrop"/>
 

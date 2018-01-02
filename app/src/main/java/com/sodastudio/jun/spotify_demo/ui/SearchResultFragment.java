@@ -54,6 +54,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
 
     private SearchPager mSearchPager;
     private SearchPager.CompleteListener mSearchListener;
+    private SearchPager.ArtistListener mArtistListener;
 
     private TrackListManager trackListManager;
     private PlaybackManager playbackManager;
@@ -149,8 +150,9 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
                             track.album.name,
                             track.album.images.get(0).url,
                             track.duration_ms,
-                            track.artists.get(0).name
-                    );
+                            track.artists.get(0).name,
+                            track.artists.get(0).id
+                            );
 
                     trackListManager.addTrack(music);
                 }
@@ -169,31 +171,44 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
 
     private void updateView(){
 
+        List<Music> mList = trackListManager.getTrackLists();
+
         if(mAdapter == null)
-            mAdapter = new TrackListAdapter(trackListManager.getTrackLists());
+            mAdapter = new TrackListAdapter(mList);
         mRecyclerView.setAdapter(mAdapter);
 
-        toolbar.setTitle(trackListManager.getTrackLists().get(0).getArtist());
+        toolbar.setTitle(mList.get(0).getArtist());
 
-        String img_url = trackListManager.getTrackLists().get(0).getAlbum_image();
 
-        Picasso.with(getContext())
-                .load(img_url)
-                .transform(new Transformation() {
-                    @Override
-                    public Bitmap transform(Bitmap source) {
-                        final Bitmap copy = source.copy(source.getConfig(), true);
-                        source.recycle();
+        mArtistListener = new SearchPager.ArtistListener() {
+            @Override
+            public void onComplete(String img_url) {
+                Picasso.with(getContext())
+                        .load(img_url)
+                        .transform(new Transformation() {
+                            @Override
+                            public Bitmap transform(Bitmap source) {
+                                final Bitmap copy = source.copy(source.getConfig(), true);
+                                source.recycle();
 
-                        return copy;
-                    }
+                                return copy;
+                            }
 
-                    @Override
-                    public String key() {
-                        return query;
-                    }
-                })
-                .into(background_album);
+                            @Override
+                            public String key() {
+                                return query;
+                            }
+                        })
+                        .into(background_album);
+            }
+
+            @Override
+            public void onError(Throwable error) {
+
+            }
+        };
+
+        mSearchPager.getArtist(mList.get(0).getArtist_id(), mArtistListener);
     }
 
 
