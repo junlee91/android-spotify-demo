@@ -1,6 +1,7 @@
 package com.sodastudio.jun.spotify_demo.ui;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -119,10 +120,9 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
 
         if(!query.equals("empty")) {
             queryData();
-        }
-        else
+        } else {
             updateView();
-
+        }
 
         return view;
     }
@@ -157,6 +157,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
                     trackListManager.addTrack(music);
                 }
 
+                Log.d(TAG, "query finished! Updating view...");
                 updateView();
             }
 
@@ -179,7 +180,6 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
         mRecyclerView.setAdapter(mAdapter);
 
         toolbar.setTitle(mList.get(0).getArtist());
-
 
         mArtistListener = new SearchPager.ArtistListener() {
             @Override
