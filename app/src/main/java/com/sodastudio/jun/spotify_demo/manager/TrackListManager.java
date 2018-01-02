@@ -37,4 +37,14 @@ public class TrackListManager {
     public void clearList(){
         trackLists.clear();
     }
+
+    public Music findCurrentMusic(String title, String album){
+        for(Music m : trackLists){
+            if(m.getTitle().equals(title) && m.getAlbum().equals(album)){
+                return m;
+            }
+        }
+
+        return null;
+    }
 }

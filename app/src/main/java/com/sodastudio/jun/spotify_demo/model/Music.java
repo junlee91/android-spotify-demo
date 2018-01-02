@@ -12,7 +12,7 @@ import java.net.URL;
 
 public class Music implements Parcelable
 {
-
+    private String id;
     private String uri;
     private String title;
     private String album;
@@ -21,7 +21,8 @@ public class Music implements Parcelable
     private String artist;
     private boolean playing;
 
-    public Music(String u, String t, String a, String a_img, long dura, String art){
+    public Music(String i, String u, String t, String a, String a_img, long dura, String art){
+        id = i;
         uri = u;
         title = t;
         album = a;
@@ -51,6 +52,8 @@ public class Music implements Parcelable
             return new Music[size];
         }
     };
+
+    public String getId() { return id; }
 
     public String getUri() {
         return uri;

@@ -22,6 +22,8 @@ import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
 import com.sodastudio.jun.spotify_demo.manager.SearchPager;
 import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
 import com.sodastudio.jun.spotify_demo.model.Music;
+import com.spotify.sdk.android.player.Error;
+import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.util.List;
@@ -32,7 +34,7 @@ import kaaes.spotify.webapi.android.models.Track;
  * Created by jun on 12/31/17.
  */
 
-public class SearchResultFragment extends Fragment{
+public class SearchResultFragment extends Fragment implements SpotifyPlayer.NotificationCallback{
 
     public static final String QUERY = "QUERY";
     public static final String TAG = "Spotify SearchResult";
@@ -45,12 +47,13 @@ public class SearchResultFragment extends Fragment{
 
     private SearchPager mSearchPager;
     private SearchPager.CompleteListener mSearchListener;
-    private MainActivity.OnPlaybackListener mPlaybackListener;
 
     private TrackListManager trackListManager;
     private PlaybackManager playbackManager;
 
     private LinearLayoutManager layoutManager;
+
+    private SpotifyPlayer mPlayer = MainActivity.mPlayer;
 
     public static SearchResultFragment newInstance(String query){
         Bundle args = new Bundle();
@@ -72,6 +75,8 @@ public class SearchResultFragment extends Fragment{
 
         playbackManager.setSearchResultFragmentAdded(true);
 
+        mPlayer.addNotificationCallback(SearchResultFragment.this);
+
         Log.d(TAG, "onCreate");
     }
 
@@ -84,7 +89,6 @@ public class SearchResultFragment extends Fragment{
         Log.d(TAG, "Query: " + query);
 
         View view = inflater.inflate(R.layout.fragment_search_result, container, false);
-
 
         playbackManager = PlaybackManager.getInstance();
         state = playbackManager.getState();
@@ -128,6 +132,7 @@ public class SearchResultFragment extends Fragment{
                     //Log.d(TAG, "success! artists: " + track.artists.get(0).name);     // artists
 
                     Music music = new Music(
+                            track.id,
                             track.uri,
                             track.name,
                             track.album.name,
@@ -158,6 +163,54 @@ public class SearchResultFragment extends Fragment{
         mRecyclerView.setAdapter(mAdapter);
     }
 
+
+//    OnPlaybackListener listener;
+//    public interface OnPlaybackListener{
+//        void Play(Music music);
+//        void Finish(Music music);
+//    }
+
+
+    @Override
+    public void onPlaybackEvent(PlayerEvent playerEvent) {
+
+        if(!playerEvent.name().contains("Metadata"))
+            Log.d(TAG, "Playback event received: " + playerEvent.name());
+
+        switch (playerEvent.name()) {
+            // Handle event type as necessary
+
+            case "kSpPlaybackNotifyPlay":
+                break;
+
+            case "kSpPlaybackNotifyPause":
+                Log.d(TAG, mPlayer.getMetadata().currentTrack.name);
+
+                String title = mPlayer.getMetadata().currentTrack.name;
+                String album = mPlayer.getMetadata().currentTrack.albumName;
+
+                Music music = TrackListManager.getInstance().findCurrentMusic(title, album);
+                music.setPlaying(false);
+                mAdapter.notifyDataSetChanged();
+
+                break;
+
+            case "kSpPlaybackNotifyTrackChanged":
+                break;
+
+            case "kSpPlaybackEventAudioFlush":
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onPlaybackError(Error error) {
+
+    }
+
     private class TrackListHolder extends RecyclerView.ViewHolder
     {
         private Music music;
@@ -165,8 +218,6 @@ public class SearchResultFragment extends Fragment{
         private TextView artist_text;
         private TextView album_text;
         private ImageButton more_button;
-
-        private SpotifyPlayer mPlayer = MainActivity.mPlayer;
 
         private TrackListHolder(final View itemView){
             super(itemView);
@@ -190,41 +241,27 @@ public class SearchResultFragment extends Fragment{
                 }
             });
 
-
-            mPlaybackListener = new MainActivity.OnPlaybackListener() {
-                @Override
-                public void Play(Music playingMusic) {
-                    Log.d(TAG, playingMusic.getTitle() + " is playing");
-                    playingMusic.setPlaying(true);
-                    mAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void Finish(Music finishMusic) {
-                    Log.d(TAG, finishMusic.getTitle() + " finished");
-                    finishMusic.setPlaying(false);
-                    mAdapter.notifyDataSetChanged();
-                }
-            };
-
-
             title_text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    if(music.isPlaying()) return;
+                    if(mPlayer.getPlaybackState().isPlaying) {
+                        String album = mPlayer.getMetadata().currentTrack.albumName;
+                        String title = mPlayer.getMetadata().currentTrack.name;
 
-                    playbackManager = PlaybackManager.getInstance();
+                        Music prevMusic = TrackListManager.getInstance().findCurrentMusic(title, album);
 
-                    Music prevMusic = playbackManager.getMusic();
-                    if(prevMusic != null)
-                        prevMusic.setPlaying(false);
+                        if(prevMusic != null) {
+                            Log.d(TAG, "prev playing: " + prevMusic.getTitle());
+                            prevMusic.setPlaying(false);
+                        }
+                    }
 
                     mPlayer.playUri(null, music.getUri(), 0, 0);
+                    Log.d(TAG, "now playing: " + music.getTitle());
+                    music.setPlaying(true);
 
-                    playbackManager.setMusic(music);
-
-                    ((MainActivity)getActivity()).setListener(mPlaybackListener, music);
+                    mAdapter.notifyDataSetChanged();
                 }
             });
         }
@@ -290,6 +327,12 @@ public class SearchResultFragment extends Fragment{
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
+
     Parcelable state;
 
     @Override
@@ -314,8 +357,7 @@ public class SearchResultFragment extends Fragment{
         super.onDestroyView();
         Log.d(TAG, "onDestroyView");
 
-        //playbackManager = PlaybackManager.getInstance();
-        //playbackManager.setSearchResultFragmentAdded(false);
+
     }
 
 

@@ -13,6 +13,7 @@ import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
 import com.sodastudio.jun.spotify_demo.model.Music;
 import com.sodastudio.jun.spotify_demo.ui.MainFragment;
 import com.sodastudio.jun.spotify_demo.ui.SearchFragment;
+import com.sodastudio.jun.spotify_demo.ui.SearchResultFragment;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
@@ -31,7 +32,7 @@ import kaaes.spotify.webapi.android.models.TracksPager;
 import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity
-    implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback
+    implements ConnectionStateCallback
 {
 
     private static final String TAG = "Spotify MainActivity";
@@ -51,13 +52,6 @@ public class MainActivity extends AppCompatActivity
     private String AUTH_TOKEN;
 
     public static SpotifyService spotifyService;
-
-    OnPlaybackListener listener;
-
-    public interface OnPlaybackListener{
-        void Play(Music music);
-        void Finish(Music music);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +81,7 @@ public class MainActivity extends AppCompatActivity
                     Log.d(TAG,"-- Player initialized --");
                     mPlayer = spotifyPlayer;
                     mPlayer.addConnectionStateCallback(MainActivity.this);
-                    mPlayer.addNotificationCallback(MainActivity.this);
+                    //mPlayer.addNotificationCallback(MainActivity.this);
 
                     Log.d(TAG, "AccessToken: " + auth_token);
 
@@ -180,7 +174,7 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
 
         if (mPlayer != null) {
-            mPlayer.removeNotificationCallback(MainActivity.this);
+            //mPlayer.removeNotificationCallback(MainActivity.this);
             mPlayer.removeConnectionStateCallback(MainActivity.this);
         }
     }
@@ -192,44 +186,48 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    private Music music;
+//    private Music music;
+//
+//    public void setListener(OnPlaybackListener lis, Music mus){
+//        listener = lis;
+//        music = mus;
+//    }
 
-    public void setListener(OnPlaybackListener lis, Music mus){
-        listener = lis;
-        music = mus;
-    }
 
-    @Override
-    public void onPlaybackEvent(PlayerEvent playerEvent) {
-        Log.d(TAG, "Playback event received: " + playerEvent.name());
 
-        mCurrentPlaybackState = mPlayer.getPlaybackState();
-
-        switch (playerEvent.name()) {
-            // Handle event type as necessary
-
-            case "kSpPlaybackNotifyPlay":
-                listener.Play(music);
-                break;
-
-            case "kSpPlaybackNotifyPause":
-                listener.Finish(music);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onPlaybackError(Error error) {
-        Log.d(TAG, "Playback error received: " + error.name());
-        switch (error) {
-            // Handle error type as necessary
-            default:
-                break;
-        }
-    }
+//    @Override
+//    public void onPlaybackEvent(PlayerEvent playerEvent) {
+//        Log.d(TAG, "Playback event received: " + playerEvent.name());
+//
+//        mCurrentPlaybackState = mPlayer.getPlaybackState();
+//
+//        switch (playerEvent.name()) {
+//            // Handle event type as necessary
+//
+//            case "kSpPlaybackNotifyPlay":
+//                //Log.d(TAG, "Playback event received: " + playerEvent.name());
+//                listener.Play(music);
+//                break;
+//
+//            case "kSpPlaybackNotifyPause":
+//                //Log.d(TAG, "Playback event received: " + playerEvent.name());
+//                listener.Finish(music);
+//                break;
+//
+//            default:
+//                break;
+//        }
+//    }
+//
+//    @Override
+//    public void onPlaybackError(Error error) {
+//        Log.d(TAG, "Playback error received: " + error.name());
+//        switch (error) {
+//            // Handle error type as necessary
+//            default:
+//                break;
+//        }
+//    }
 
     @Override
     public void onBackPressed() {

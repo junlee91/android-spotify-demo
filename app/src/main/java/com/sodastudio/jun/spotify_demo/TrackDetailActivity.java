@@ -28,6 +28,7 @@ public class TrackDetailActivity extends AppCompatActivity {
 
         final ImageView albumImage = findViewById(R.id.detail_album_image_field);
         final TextView titleView = findViewById(R.id.detail_track_title_field);
+        final TextView artistView = findViewById(R.id.detail_artist_field);
         final TextView albumView = findViewById(R.id.detail_album_field);
 
         final TextView cancelView =findViewById(R.id.detail_cancel_button);
@@ -59,6 +60,7 @@ public class TrackDetailActivity extends AppCompatActivity {
 
         String title = detailMusic.getTitle();
         String album = detailMusic.getAlbum();
+        String artist = detailMusic.getArtist();
 
         if(title.length() > 40){
             title = title.substring(0, 40);
@@ -70,7 +72,13 @@ public class TrackDetailActivity extends AppCompatActivity {
             album += "...";
         }
 
+        if(artist.length() > 40){
+            artist = artist.substring(0,40);
+            artist += "...";
+        }
+
         titleView.setText(title);
+        artistView.setText(artist);
         albumView.setText(album);
 
         Log.d(TAG, detailMusic.getTitle());
