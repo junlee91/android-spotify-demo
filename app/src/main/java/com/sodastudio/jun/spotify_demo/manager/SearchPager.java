@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.sodastudio.jun.spotify_demo.MainActivity;
 import com.sodastudio.jun.spotify_demo.model.AlbumNew;
+import com.sodastudio.jun.spotify_demo.model.TopArtist;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,11 @@ public class SearchPager {
         void onComplete(String url);
         void onError(Throwable error);
     }
-    public interface NewAlbumListener{
+    public interface onCompleteListener {
+        void onComplete();
+        void onError(Throwable error);
+    }
+    public interface onCompleteTopArtistListener {
         void onComplete();
         void onError(Throwable error);
     }
@@ -52,7 +57,6 @@ public class SearchPager {
         if(searchPager == null){
             searchPager = new SearchPager();
         }
-
         return searchPager;
     }
 
@@ -92,10 +96,12 @@ public class SearchPager {
         });
     }
 
-    public void getMyTopArtist(){
+    public void getMyTopArtist(final onCompleteTopArtistListener listener){
 
         Map<String, Object> options = new HashMap<>();
-        options.put(SpotifyService.LIMIT, 30);
+        options.put(SpotifyService.LIMIT, 10);
+
+        final ListManager listManager = ListManager.getInstance();
 
         spotifyService.getTopArtists(options, new SpotifyCallback<Pager<Artist>>() {
             @Override
@@ -110,6 +116,14 @@ public class SearchPager {
                 for(Artist art : mList){
                     Log.d("SearchPager", art.name);
                     Log.d("SearchPager", art.images.get(1).url);
+
+                    listManager.addTopArtist(new TopArtist(art.name, art.images.get(1).url));
+                }
+
+                if(listener != null)
+                    listener.onComplete();
+                else{
+                    Log.d("SearchPager", "What is happening?");
                 }
             }
         });
@@ -117,7 +131,9 @@ public class SearchPager {
 
     public void getMyTopTracks(){
         Map<String, Object> options = new HashMap<>();
-        options.put(SpotifyService.LIMIT, 30);
+        options.put(SpotifyService.LIMIT, 10);
+
+        final ListManager listManager = ListManager.getInstance();
 
         spotifyService.getTopTracks(options, new SpotifyCallback<Pager<Track>>() {
             @Override
@@ -132,15 +148,18 @@ public class SearchPager {
                 for(Track track : tracks){
                     Log.d("SearchPager", track.album.name);
                     Log.d("SearchPager", track.album.images.get(1).url);
+
                 }
             }
         });
     }
 
-    public void getNewRelease(final NewAlbumListener listener){
+    public void getNewRelease(final onCompleteListener listener){
         Map<String, Object> options = new HashMap<>();
         options.put(SpotifyService.OFFSET, 0);  // 0 ~ 5 6 ~ 10
-        options.put(SpotifyService.LIMIT, 30);
+        options.put(SpotifyService.LIMIT, 10);
+
+        final ListManager listManager = ListManager.getInstance();
 
         spotifyService.getNewReleases(options, new SpotifyCallback<NewReleases>() {
             @Override
@@ -188,7 +207,6 @@ public class SearchPager {
 
                             AlbumNew albumNew = new AlbumNew(albumSimple.name, albumSimple.images.get(1).url, artists);
 
-                            ListManager listManager = ListManager.getInstance();
                             listManager.addNewAlbum(albumNew);
 
                         }

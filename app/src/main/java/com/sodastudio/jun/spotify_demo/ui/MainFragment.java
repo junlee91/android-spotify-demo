@@ -66,7 +66,7 @@ public class MainFragment extends Fragment {
         radioLayout.setOnClickListener(mListener);
         libraryLayout.setOnClickListener(mListener);
 
-        homeLayout.callOnClick();
+        //homeLayout.callOnClick();
 
         return view;
     }

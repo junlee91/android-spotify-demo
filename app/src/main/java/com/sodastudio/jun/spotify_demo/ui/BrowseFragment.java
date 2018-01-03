@@ -34,7 +34,7 @@ public class BrowseFragment extends Fragment {
     private newAlbumAdapter mAdapter;
 
     private ListManager listManager;
-    private SearchPager.NewAlbumListener listener;
+    private SearchPager.onCompleteListener listener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class BrowseFragment extends Fragment {
 
         if(albumNewList.size() == 0){
 
-            listener = new SearchPager.NewAlbumListener() {
+            listener = new SearchPager.onCompleteListener() {
                 @Override
                 public void onComplete() {
                     Log.d(TAG, "onComplete!");

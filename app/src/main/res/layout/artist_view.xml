@@ -10,12 +10,13 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:id="@+id/artist_image_field"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/maroon_sample_album"/>
 
     <TextView
-        android:id="@+id/album_title"
+        android:id="@+id/artist_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"
@@ -23,7 +24,7 @@
         android:textStyle="bold"
         android:textColor="@color/colorWhite"
         android:textAlignment="center"
-        android:text="Liked from Radio"/>
+        android:text="Maroon 5"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -33,6 +34,6 @@
         android:textStyle="bold"
         android:textColor="@color/colorNavIcon"
         android:textAlignment="center"
-        android:text="Playlist"/>
+        android:text=""/>
 
 </LinearLayout>
