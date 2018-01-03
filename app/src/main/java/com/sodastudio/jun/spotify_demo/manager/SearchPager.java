@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sodastudio.jun.spotify_demo.MainActivity;
+import com.sodastudio.jun.spotify_demo.model.AlbumNew;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +14,10 @@ import java.util.Map;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.NewReleases;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
@@ -37,6 +41,10 @@ public class SearchPager {
     }
     public interface ArtistListener{
         void onComplete(String url);
+        void onError(Throwable error);
+    }
+    public interface NewAlbumListener{
+        void onComplete();
         void onError(Throwable error);
     }
 
@@ -129,7 +137,7 @@ public class SearchPager {
         });
     }
 
-    public void getNewRelease(){
+    public void getNewRelease(final NewAlbumListener listener){
         Map<String, Object> options = new HashMap<>();
         options.put(SpotifyService.OFFSET, 0);  // 0 ~ 5 6 ~ 10
         options.put(SpotifyService.LIMIT, 30);
@@ -138,17 +146,58 @@ public class SearchPager {
             @Override
             public void failure(SpotifyError spotifyError) {
                 Log.d("SearchPager", spotifyError.toString());
+
+                if(listener != null)
+                    listener.onError(spotifyError);
             }
 
             @Override
             public void success(NewReleases newReleases, Response response) {
                 List<AlbumSimple> albums = newReleases.albums.items;
 
-                for(AlbumSimple albumSimple : albums){
-                    Log.d("SearchPage", albumSimple.name);
-                    Log.d("SearchPage", albumSimple.id);
-                    Log.d("SearchPage", albumSimple.images.get(1).url);
+                for(final AlbumSimple albumSimple : albums){
+                    //Log.d("SearchPage", albumSimple.name);
+                    //Log.d("SearchPage", albumSimple.id);
+                    //Log.d("SearchPage", albumSimple.uri);
+                    //Log.d("SearchPage", albumSimple.href);
+                    //Log.d("SearchPage", albumSimple.images.get(1).url);
+
+                    spotifyService.getAlbum(albumSimple.id, new SpotifyCallback<Album>() {
+                        @Override
+                        public void failure(SpotifyError spotifyError) {
+                            Log.d("SearchPage Followup", spotifyError.toString());
+
+                            if(listener != null)
+                                listener.onError(spotifyError);
+                        }
+
+                        @Override
+                        public void success(Album album, Response response) {
+
+                            Log.d("SearchPage Followup", albumSimple.name);
+                            Log.d("SearchPage Followup", albumSimple.id);
+                            Log.d("SearchPage Followup", albumSimple.images.get(1).url);
+
+                            List<ArtistSimple> list = album.artists;
+                            List<String> artists = new ArrayList<>();
+
+                            for(ArtistSimple simple : list){
+                                Log.d("SearchPage Followup", simple.name);
+                                artists.add(simple.name);
+                            }
+
+                            AlbumNew albumNew = new AlbumNew(albumSimple.name, albumSimple.images.get(1).url, artists);
+
+                            ListManager listManager = ListManager.getInstance();
+                            listManager.addNewAlbum(albumNew);
+
+                        }
+
+                    });
                 }
+
+                if(listener != null)
+                    listener.onComplete();
             }
         });
 

@@ -1,5 +1,6 @@
 package com.sodastudio.jun.spotify_demo.manager;
 
+import com.sodastudio.jun.spotify_demo.model.AlbumNew;
 import com.sodastudio.jun.spotify_demo.model.ArtistSearch;
 import com.sodastudio.jun.spotify_demo.model.Music;
 
@@ -9,24 +10,34 @@ import java.util.ArrayList;
  * Created by jun on 12/30/17.
  */
 
-public class TrackListManager {
+public class ListManager {
 
-    private static TrackListManager trackListManager;
+    private static ListManager listManager;
 
     private ArrayList<Music> trackLists;
     private ArrayList<ArtistSearch> artistSearches;
+    private ArrayList<AlbumNew> albumNewArrayList;
 
-    public static TrackListManager getInstance(){
-        if(trackListManager == null){
-            trackListManager = new TrackListManager();
+    public static ListManager getInstance(){
+        if(listManager == null){
+            listManager = new ListManager();
         }
 
-        return trackListManager;
+        return listManager;
     }
 
-    private TrackListManager(){
+    private ListManager(){
         trackLists = new ArrayList<>();
         artistSearches = new ArrayList<>();
+        albumNewArrayList = new ArrayList<>();
+    }
+
+    public void addNewAlbum(AlbumNew albumNew){
+        albumNewArrayList.add(albumNew);
+    }
+
+    public ArrayList<AlbumNew> getAlbumNewArrayList(){
+        return albumNewArrayList;
     }
 
     public ArrayList<ArtistSearch> getArtists() {
@@ -35,13 +46,18 @@ public class TrackListManager {
 
     public void addArtist(ArtistSearch search){
 
+        ArtistSearch found = null;
+
         for(ArtistSearch artistSearch : artistSearches)
         {
             if(artistSearch.getName().equals(search.getName()))
             {
-                artistSearches.remove(artistSearch);
+                found = artistSearch;
             }
         }
+
+        if(found != null)
+            artistSearches.remove(found);
 
         artistSearches.add(0, search);
     }

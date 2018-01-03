@@ -1,7 +1,6 @@
 package com.sodastudio.jun.spotify_demo.ui;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ import com.sodastudio.jun.spotify_demo.R;
 import com.sodastudio.jun.spotify_demo.TrackDetailActivity;
 import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
 import com.sodastudio.jun.spotify_demo.manager.SearchPager;
-import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
+import com.sodastudio.jun.spotify_demo.manager.ListManager;
 import com.sodastudio.jun.spotify_demo.model.ArtistSearch;
 import com.sodastudio.jun.spotify_demo.model.Music;
 import com.spotify.sdk.android.player.Error;
@@ -58,7 +57,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
     private SearchPager.CompleteListener mSearchListener;
     private SearchPager.ArtistListener mArtistListener;
 
-    private TrackListManager trackListManager;
+    private ListManager listManager;
     private PlaybackManager playbackManager;
 
     private LinearLayoutManager layoutManager;
@@ -80,7 +79,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
         super.onCreate(savedInstanceState);
         mSearchPager = SearchPager.getInstance(getContext());
         setRetainInstance(true);
-        trackListManager = TrackListManager.getInstance();
+        listManager = ListManager.getInstance();
         playbackManager = PlaybackManager.getInstance();
 
         playbackManager.setSearchResultFragmentAdded(true);
@@ -143,7 +142,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
             @Override
             public void onComplete(List<Track> items) {
 
-                trackListManager.clearList();
+                listManager.clearList();
 
                 for(Track track : items){
                     //Log.d(TAG, "success! link: " + track.uri);                      // music link
@@ -164,7 +163,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
                             track.artists.get(0).id
                             );
 
-                    trackListManager.addTrack(music);
+                    listManager.addTrack(music);
                 }
 
                 Log.d(TAG, "query finished! Updating view...");
@@ -182,7 +181,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
 
     private void updateView(){
 
-        List<Music> mList = trackListManager.getTrackLists();
+        List<Music> mList = listManager.getTrackLists();
 
         if(mList.size() == 0) return;
 
@@ -206,7 +205,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
                                 final Bitmap copy = source.copy(source.getConfig(), true);
                                 source.recycle();
 
-                                trackListManager.addArtist(new ArtistSearch(artistName, copy));
+                                listManager.addArtist(new ArtistSearch(artistName, copy));
 
                                 return copy;
                             }
@@ -246,7 +245,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
                 String title = mPlayer.getMetadata().currentTrack.name;
                 String album = mPlayer.getMetadata().currentTrack.albumName;
 
-                Music music = TrackListManager.getInstance().findCurrentMusic(title, album);
+                Music music = ListManager.getInstance().findCurrentMusic(title, album);
 
                 if(music != null)
                     music.setPlaying(false);
@@ -309,7 +308,7 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
                         String album = mPlayer.getMetadata().currentTrack.albumName;
                         String title = mPlayer.getMetadata().currentTrack.name;
 
-                        Music prevMusic = TrackListManager.getInstance().findCurrentMusic(title, album);
+                        Music prevMusic = ListManager.getInstance().findCurrentMusic(title, album);
 
                         if(prevMusic != null) {
                             Log.d(TAG, "prev playing: " + prevMusic.getTitle());

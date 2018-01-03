@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
+import com.sodastudio.jun.spotify_demo.manager.SearchPager;
 import com.sodastudio.jun.spotify_demo.ui.MainFragment;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
@@ -126,6 +127,8 @@ public class MainActivity extends AppCompatActivity
     public void onLoggedIn() {
         Log.d(TAG, "User logged in");
         //showToast("Login Success!");
+
+        SearchPager.getInstance(this).getNewRelease(null);
     }
 
     @Override

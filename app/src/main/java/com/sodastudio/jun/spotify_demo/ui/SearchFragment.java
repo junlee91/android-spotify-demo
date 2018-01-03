@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.sodastudio.jun.spotify_demo.R;
 import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
-import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
+import com.sodastudio.jun.spotify_demo.manager.ListManager;
 import com.sodastudio.jun.spotify_demo.model.ArtistSearch;
 
 import java.util.List;
@@ -91,7 +91,7 @@ public class SearchFragment extends Fragment{
 
         searchListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mAdapter = new ArtistListAdapter(TrackListManager.getInstance().getArtists());
+        mAdapter = new ArtistListAdapter(ListManager.getInstance().getArtists());
         searchListView.setAdapter(mAdapter);
 
         scalingLayout.setListener(new ScalingLayoutListener() {
