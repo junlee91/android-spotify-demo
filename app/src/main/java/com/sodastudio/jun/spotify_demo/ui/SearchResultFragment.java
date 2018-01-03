@@ -24,6 +24,7 @@ import com.sodastudio.jun.spotify_demo.TrackDetailActivity;
 import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
 import com.sodastudio.jun.spotify_demo.manager.SearchPager;
 import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
+import com.sodastudio.jun.spotify_demo.model.ArtistSearch;
 import com.sodastudio.jun.spotify_demo.model.Music;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.PlayerEvent;
@@ -136,8 +137,6 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
         return view;
     }
 
-
-
     private void queryData(){
 
         mSearchListener = new SearchPager.CompleteListener() {
@@ -192,7 +191,9 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
 
         mRecyclerView.setAdapter(mAdapter);
 
-        toolbar.setTitle(mList.get(0).getArtist());
+        final String artistName = mList.get(0).getArtist();
+
+        toolbar.setTitle(artistName);
 
         mArtistListener = new SearchPager.ArtistListener() {
             @Override
@@ -204,6 +205,8 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
                             public Bitmap transform(Bitmap source) {
                                 final Bitmap copy = source.copy(source.getConfig(), true);
                                 source.recycle();
+
+                                trackListManager.addArtist(new ArtistSearch(artistName, copy));
 
                                 return copy;
                             }
@@ -221,7 +224,6 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
 
             }
         };
-
         mSearchPager.getArtist(mList.get(0).getArtist_id(), mArtistListener);
     }
 
@@ -402,6 +404,10 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
 
         playbackManager = PlaybackManager.getInstance();
         playbackManager.setState(state);
+
+
+        Fragment fragment = getFragmentManager().findFragmentByTag("SearchFragment");
+        ((SearchFragment)fragment).refresh();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.sodastudio.jun.spotify_demo.manager;
 
+import com.sodastudio.jun.spotify_demo.model.ArtistSearch;
 import com.sodastudio.jun.spotify_demo.model.Music;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class TrackListManager {
     private static TrackListManager trackListManager;
 
     private ArrayList<Music> trackLists;
+    private ArrayList<ArtistSearch> artistSearches;
 
     public static TrackListManager getInstance(){
         if(trackListManager == null){
@@ -24,6 +26,24 @@ public class TrackListManager {
 
     private TrackListManager(){
         trackLists = new ArrayList<>();
+        artistSearches = new ArrayList<>();
+    }
+
+    public ArrayList<ArtistSearch> getArtists() {
+        return artistSearches;
+    }
+
+    public void addArtist(ArtistSearch search){
+
+        for(ArtistSearch artistSearch : artistSearches)
+        {
+            if(artistSearch.getName().equals(search.getName()))
+            {
+                artistSearches.remove(artistSearch);
+            }
+        }
+
+        artistSearches.add(0, search);
     }
 
     public ArrayList<Music> getTrackLists() {

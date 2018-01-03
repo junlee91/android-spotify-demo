@@ -66,4 +66,20 @@
 
     </iammert.com.view.scalinglib.ScalingLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="Recent searches"
+        android:textSize="15sp"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:textAlignment="center"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/Artist_search_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+
 </LinearLayout>

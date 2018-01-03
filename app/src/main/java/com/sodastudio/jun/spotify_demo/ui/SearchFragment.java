@@ -8,17 +8,24 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sodastudio.jun.spotify_demo.R;
 import com.sodastudio.jun.spotify_demo.manager.PlaybackManager;
+import com.sodastudio.jun.spotify_demo.manager.TrackListManager;
+import com.sodastudio.jun.spotify_demo.model.ArtistSearch;
+
+import java.util.List;
 
 import iammert.com.view.scalinglib.ScalingLayout;
 import iammert.com.view.scalinglib.ScalingLayoutListener;
@@ -35,6 +42,8 @@ public class SearchFragment extends Fragment{
     private TextView textViewSearch;
     private EditText editTextSearch;
     private ScalingLayout scalingLayout;
+    private RecyclerView searchListView;
+    private ArtistListAdapter mAdapter;
 
     FragmentManager fragmentManager;
 
@@ -78,6 +87,12 @@ public class SearchFragment extends Fragment{
         editTextSearch = view.findViewById(R.id.editTextSearch);
         searchButton.setOnClickListener(mListener);
         scalingLayout = view.findViewById(R.id.scalingLayout);
+        searchListView = view.findViewById(R.id.Artist_search_list);
+
+        searchListView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mAdapter = new ArtistListAdapter(TrackListManager.getInstance().getArtists());
+        searchListView.setAdapter(mAdapter);
 
         scalingLayout.setListener(new ScalingLayoutListener() {
             @Override
@@ -182,6 +197,61 @@ public class SearchFragment extends Fragment{
             }
         }
     };
+
+    public void refresh(){
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private class ArtistListHolder extends RecyclerView.ViewHolder
+    {
+        private TextView artistName;
+        private ImageView artistImage;
+        private ArtistSearch artistSearch;
+
+        private ArtistListHolder(View itemView) {
+            super(itemView);
+
+            artistImage = itemView.findViewById(R.id.search_artist_image_field);
+            artistName = itemView.findViewById(R.id.search_artist_name);
+        }
+
+        private void bindArtist(ArtistSearch search)
+        {
+            artistSearch = search;
+
+            artistName.setText(artistSearch.getName());
+            artistImage.setImageBitmap(artistSearch.getImage());
+        }
+    }
+
+    private class ArtistListAdapter extends RecyclerView.Adapter<ArtistListHolder>
+    {
+        private List<ArtistSearch> artistSearchList;
+
+        private ArtistListAdapter(List<ArtistSearch> list){
+            artistSearchList = list;
+        }
+
+        @Override
+        public ArtistListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
+            View view = layoutInflater.inflate(R.layout.artist_search, parent, false);
+
+            return new ArtistListHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ArtistListHolder holder, int position) {
+            holder.bindArtist(artistSearchList.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return artistSearchList.size();
+        }
+    }
 }
 
 

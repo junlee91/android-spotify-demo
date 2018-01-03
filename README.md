@@ -7,7 +7,7 @@ Music player app using the Spotify Android SDK to play an audio track.
 You can follow the [Spotify Android SDK Tutorial](https://developer.spotify.com/technologies/spotify-android-sdk/tutorial/) to start the set up.
 
 ### Quick step
-- Download the [Spotify Android playback library zip](https://github.com/spotify/android-sdk/release) and [Spotify Android auth library zip](https://github.com/spotify/android-auth/releases) from GitHub and unzip them.
+- Download the [Spotify Android playback library zip](https://github.com/spotify/android-sdk/) and [Spotify Android auth library zip](https://github.com/spotify/android-auth/) from GitHub and unzip them.
 - In a file explorer (not Android Studio), drag the unzipped spotify-auth-version.aar and spotify-player-version.aar files into the /app/libs directory in your project’s root directory.
 - Playback library can be found when you unzip the zipfile. And simply copy this .aar into app/libs
 - Auth library needs some more steps.
