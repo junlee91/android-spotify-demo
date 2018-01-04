@@ -6,6 +6,7 @@ Music player app using the Spotify Android SDK to play an audio track.
 ## YouTube Demo
 - [Login](https://youtu.be/Td9k2k80iac)
 - [Navigation and Search](https://youtu.be/0BnT-iWdWIQ)
+- [Playback](https://youtu.be/QJZFqSbEHJw)
 
 ## Getting Started
 - Clone this repo:
