@@ -4,6 +4,7 @@ import com.sodastudio.jun.spotify_demo.model.AlbumNew;
 import com.sodastudio.jun.spotify_demo.model.ArtistSearch;
 import com.sodastudio.jun.spotify_demo.model.Music;
 import com.sodastudio.jun.spotify_demo.model.TopArtist;
+import com.sodastudio.jun.spotify_demo.model.TopTrack;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ public class ListManager {
     private ArrayList<ArtistSearch> artistSearches;
     private ArrayList<AlbumNew> albumNewArrayList;
     private ArrayList<TopArtist> topArtists;
+    private ArrayList<TopTrack> topTracks;
 
     public static ListManager getInstance(){
         if(listManager == null){
@@ -33,6 +35,16 @@ public class ListManager {
         artistSearches = new ArrayList<>();
         albumNewArrayList = new ArrayList<>();
         topArtists = new ArrayList<>();
+        topTracks = new ArrayList<>();
+    }
+
+    public ArrayList<TopTrack> getTopTracks(){
+        return topTracks;
+    }
+
+    public void addTopTrack(TopTrack track){
+
+        topTracks.add(track);
     }
 
     public void addTopArtist(TopArtist artist){

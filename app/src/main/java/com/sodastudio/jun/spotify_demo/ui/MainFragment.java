@@ -106,6 +106,9 @@ public class MainFragment extends Fragment {
             {
                 case R.id.nav_home:
                     Log.d(TAG, "HOME");
+
+                    if(view.isActivated()) break;
+
                     manager.beginTransaction().replace(R.id.fragment, new HomeFragment()).commit();
 
                     setFocus(R.id.nav_home, view);
@@ -116,6 +119,9 @@ public class MainFragment extends Fragment {
                     break;
                 case R.id.nav_browse:
                     Log.d(TAG, "BROWSE");
+
+                    if(view.isActivated()) break;
+
                     manager.beginTransaction().replace(R.id.fragment, new BrowseFragment()).commit();
 
                     setFocus(R.id.nav_browse, view);
@@ -126,6 +132,9 @@ public class MainFragment extends Fragment {
                     break;
                 case R.id.nav_search:
                     Log.d(TAG, "SEARCH");
+
+                    if(view.isActivated()) break;
+
                     SearchFragment.getFragmentInstance(manager, "SearchFragment");
 
                     setFocus(R.id.nav_search, view);
@@ -136,6 +145,9 @@ public class MainFragment extends Fragment {
                     break;
                 case R.id.nav_radio:
                     Log.d(TAG, "RADIO");
+
+                    if(view.isActivated()) break;
+
                     manager.beginTransaction().replace(R.id.fragment, new RadioFragment()).commit();
 
                     setFocus(R.id.nav_radio, view);
@@ -146,6 +158,9 @@ public class MainFragment extends Fragment {
                     break;
                 case R.id.nav_library:
                     Log.d(TAG, "LIBRARY");
+
+                    if(view.isActivated()) break;
+
                     manager.beginTransaction().replace(R.id.fragment, new LibraryFragment()).commit();
 
                     setFocus(R.id.nav_library, view);
@@ -166,30 +181,35 @@ public class MainFragment extends Fragment {
                 view.setBackground(home);
                 homeText.setTextColor(focusMode);
                 homeText.setTypeface(Typeface.DEFAULT_BOLD);
+                view.setActivated(true);
                 break;
             case R.id.nav_browse:
                 browse.setTint(focusMode);
                 view.setBackground(browse);
                 browseText.setTextColor(focusMode);
                 browseText.setTypeface(Typeface.DEFAULT_BOLD);
+                view.setActivated(true);
                 break;
             case R.id.nav_search:
                 search.setTint(focusMode);
                 view.setBackground(search);
                 searchText.setTextColor(focusMode);
                 searchText.setTypeface(Typeface.DEFAULT_BOLD);
+                view.setActivated(true);
                 break;
             case R.id.nav_radio:
                 radio.setTint(focusMode);
                 view.setBackground(radio);
                 radioText.setTextColor(focusMode);
                 radioText.setTypeface(Typeface.DEFAULT_BOLD);
+                view.setActivated(true);
                 break;
             case R.id.nav_library:
                 library.setTint(focusMode);
                 view.setBackground(library);
                 libraryText.setTextColor(focusMode);
                 libraryText.setTypeface(Typeface.DEFAULT_BOLD);
+                view.setActivated(true);
                 break;
         }
     }
@@ -201,30 +221,35 @@ public class MainFragment extends Fragment {
                 view.setBackground(home);
                 homeText.setTextColor(defocusMode);
                 homeText.setTypeface(Typeface.DEFAULT);
+                view.setActivated(false);
                 break;
             case R.id.nav_browse:
                 browse.setTint(defocusMode);
                 view.setBackground(browse);
                 browseText.setTextColor(defocusMode);
                 browseText.setTypeface(Typeface.DEFAULT);
+                view.setActivated(false);
                 break;
             case R.id.nav_search:
                 search.setTint(defocusMode);
                 view.setBackground(search);
                 searchText.setTextColor(defocusMode);
                 searchText.setTypeface(Typeface.DEFAULT);
+                view.setActivated(false);
                 break;
             case R.id.nav_radio:
                 radio.setTint(defocusMode);
                 view.setBackground(radio);
                 radioText.setTextColor(defocusMode);
                 radioText.setTypeface(Typeface.DEFAULT);
+                view.setActivated(false);
                 break;
             case R.id.nav_library:
                 library.setTint(defocusMode);
                 view.setBackground(library);
                 libraryText.setTextColor(defocusMode);
                 libraryText.setTypeface(Typeface.DEFAULT);
+                view.setActivated(false);
                 break;
             case -1:
                 break;

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.sodastudio.jun.spotify_demo.MainActivity;
 import com.sodastudio.jun.spotify_demo.model.AlbumNew;
 import com.sodastudio.jun.spotify_demo.model.TopArtist;
+import com.sodastudio.jun.spotify_demo.model.TopTrack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +50,10 @@ public class SearchPager {
         void onError(Throwable error);
     }
     public interface onCompleteTopArtistListener {
+        void onComplete();
+        void onError(Throwable error);
+    }
+    public interface onCompleteTopTrackListener {
         void onComplete();
         void onError(Throwable error);
     }
@@ -107,6 +112,9 @@ public class SearchPager {
             @Override
             public void failure(SpotifyError spotifyError) {
                 Log.d("SearchPager", spotifyError.toString());
+
+                if(listener != null)
+                    listener.onError(spotifyError);
             }
 
             @Override
@@ -129,7 +137,7 @@ public class SearchPager {
         });
     }
 
-    public void getMyTopTracks(){
+    public void getMyTopTracks(final onCompleteTopTrackListener listener){
         Map<String, Object> options = new HashMap<>();
         options.put(SpotifyService.LIMIT, 10);
 
@@ -139,6 +147,9 @@ public class SearchPager {
             @Override
             public void failure(SpotifyError spotifyError) {
                 Log.d("SearchPager", spotifyError.toString());
+
+                if(listener != null)
+                    listener.onError(spotifyError);
             }
 
             @Override
@@ -149,7 +160,12 @@ public class SearchPager {
                     Log.d("SearchPager", track.album.name);
                     Log.d("SearchPager", track.album.images.get(1).url);
 
+                    listManager.addTopTrack(new TopTrack(track.album.name, track.album.images.get(1).url));
+
                 }
+
+                if(listener != null)
+                    listener.onComplete();
             }
         });
     }

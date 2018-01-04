@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sodastudio.jun.spotify_demo.MainActivity;
 import com.sodastudio.jun.spotify_demo.R;
 import com.sodastudio.jun.spotify_demo.manager.ListManager;
 import com.sodastudio.jun.spotify_demo.manager.SearchPager;
 import com.sodastudio.jun.spotify_demo.model.TopArtist;
+import com.sodastudio.jun.spotify_demo.model.TopTrack;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +34,14 @@ public class HomeFragment extends Fragment{
 
     private RecyclerView mMadeForYouRecyclerView;
     private RecyclerView mTopArtistRecyclerView;
+    private RecyclerView mTopTrackRecyclerView;
 
     private HorizontalItemAdapter itemAdapter;
     private HorizontalArtistAdapter artistAdapter;
+    private HorizontalTrackAdapter trackAdapter;
 
-    private SearchPager.onCompleteTopArtistListener listener;
+    private SearchPager.onCompleteTopArtistListener artistListener;
+    private SearchPager.onCompleteTopTrackListener trackListener;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +56,15 @@ public class HomeFragment extends Fragment{
 
         mMadeForYouRecyclerView = view.findViewById(R.id.made_for_you_RecyclerView);
         mTopArtistRecyclerView = view.findViewById(R.id.top_artist_RecyclerView);
+        mTopTrackRecyclerView = view.findViewById(R.id.top_tracks_RecyclerView);
 
         LinearLayoutManager horizontal_home_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager horizontal_artist_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager horizontal_track_layout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
         mMadeForYouRecyclerView.setLayoutManager(horizontal_home_layout);
         mTopArtistRecyclerView.setLayoutManager(horizontal_artist_layout);
+        mTopTrackRecyclerView.setLayoutManager(horizontal_track_layout);
 
         updateUI();
 
@@ -73,6 +76,8 @@ public class HomeFragment extends Fragment{
         setMadeForYou();
 
         setTopArtists();
+
+        setTopTracks();
     }
 
     private void setMadeForYou(){
@@ -88,6 +93,7 @@ public class HomeFragment extends Fragment{
 
         if(itemAdapter == null)
             itemAdapter = new HorizontalItemAdapter(mlist);
+
         mMadeForYouRecyclerView.setAdapter(itemAdapter);
     }
 
@@ -96,7 +102,7 @@ public class HomeFragment extends Fragment{
 
         if(artists.size() == 0){
 
-            listener = new SearchPager.onCompleteTopArtistListener() {
+            artistListener = new SearchPager.onCompleteTopArtistListener() {
                 @Override
                 public void onComplete() {
                     Log.d(TAG, "onComplete!");
@@ -110,13 +116,108 @@ public class HomeFragment extends Fragment{
                 }
             };
 
-            SearchPager.getInstance(getContext()).getMyTopArtist(listener);
+            SearchPager.getInstance(getContext()).getMyTopArtist(artistListener);
         }
 
         if(artistAdapter == null)
             artistAdapter = new HorizontalArtistAdapter(artists);
 
         mTopArtistRecyclerView.setAdapter(artistAdapter);
+    }
+
+    private void setTopTracks(){
+        List<TopTrack> tracks = ListManager.getInstance().getTopTracks();
+
+        if(tracks.size() == 0){
+            trackListener = new SearchPager.onCompleteTopTrackListener() {
+                @Override
+                public void onComplete() {
+                    trackAdapter.notifyDataSetChanged();
+                    setTopTracks();
+                }
+
+                @Override
+                public void onError(Throwable error) {
+
+                }
+
+            };
+
+            SearchPager.getInstance(getContext()).getMyTopTracks(trackListener);
+        }
+
+        if(trackAdapter == null)
+            trackAdapter = new HorizontalTrackAdapter(tracks);
+
+        mTopTrackRecyclerView.setAdapter(trackAdapter);
+
+    }
+
+    private class HorizontalTrackHolder extends RecyclerView.ViewHolder{
+
+        private ImageView album_image_field;
+        private TextView album_name_view;
+
+        private HorizontalTrackHolder(View itemView) {
+            super(itemView);
+
+            album_image_field = itemView.findViewById(R.id.track_image_field);
+            album_name_view = itemView.findViewById(R.id.track_name);
+        }
+
+        private void bindTrack(final TopTrack track){
+
+            album_name_view.setText(track.getName());
+
+            Picasso.with(getContext())
+                    .load(track.getImg_url())
+                    .transform(new Transformation() {
+                        @Override
+                        public Bitmap transform(Bitmap source) {
+                            final Bitmap copy = source.copy(source.getConfig(), true);
+                            source.recycle();
+
+                            return copy;
+                        }
+
+                        @Override
+                        public String key() {
+                            return track.getName();
+                        }
+                    })
+                    .into(album_image_field);
+
+        }
+
+    }
+
+    private class HorizontalTrackAdapter extends RecyclerView.Adapter<HorizontalTrackHolder>{
+
+        private List<TopTrack> tracks;
+
+        private HorizontalTrackAdapter(List<TopTrack> list){
+            tracks = list;
+        }
+
+        @Override
+        public HorizontalTrackHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+
+            View view = inflater.inflate(R.layout.track_view, parent, false);
+
+            return new HorizontalTrackHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(HorizontalTrackHolder holder, int position) {
+            holder.bindTrack(tracks.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return tracks.size();
+        }
     }
 
 
@@ -188,6 +289,8 @@ public class HomeFragment extends Fragment{
             return artists.size();
         }
     }
+
+
 
     private class HorizontalItemHolder extends RecyclerView.ViewHolder{
 

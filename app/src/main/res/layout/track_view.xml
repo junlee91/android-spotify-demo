@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
+    android:paddingTop="5dp"
+    android:paddingStart="5dp"
+    android:paddingEnd="15dp"
+    android:paddingBottom="5dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/track_image_field"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/maroon_sample_album"/>
+
+    <TextView
+        android:id="@+id/track_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
+        android:textAlignment="center"
+        android:text="Maroon 5"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorNavIcon"
+        android:textAlignment="center"
+        android:text=""/>
+
+</LinearLayout>
