@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.sodastudio.jun.spotify_demo.R;
 import com.sodastudio.jun.spotify_demo.manager.ListManager;
 import com.sodastudio.jun.spotify_demo.manager.SearchPager;
+import com.sodastudio.jun.spotify_demo.model.SimplePlaylist;
 import com.sodastudio.jun.spotify_demo.model.TopArtist;
 import com.sodastudio.jun.spotify_demo.model.TopTrack;
 import com.squareup.picasso.Picasso;
@@ -23,6 +24,8 @@ import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
 
 /**
  * Created by jun on 12/28/17.
@@ -36,7 +39,7 @@ public class HomeFragment extends Fragment{
     private RecyclerView mTopArtistRecyclerView;
     private RecyclerView mTopTrackRecyclerView;
 
-    private HorizontalItemAdapter itemAdapter;
+    private HorizontalSimpleListAdapter simpleListAdapter;
     private HorizontalArtistAdapter artistAdapter;
     private HorizontalTrackAdapter trackAdapter;
 
@@ -81,20 +84,13 @@ public class HomeFragment extends Fragment{
     }
 
     private void setMadeForYou(){
-        ArrayList<String> mlist = new ArrayList<>();
 
-        mlist.add("Test");
-        mlist.add("Test");
-        mlist.add("Test");
-        mlist.add("Test");
-        mlist.add("Test");
-        mlist.add("Test");
-        mlist.add("Test");
+        ArrayList<SimplePlaylist> mlist = ListManager.getInstance().getSimplePlaylists();
 
-        if(itemAdapter == null)
-            itemAdapter = new HorizontalItemAdapter(mlist);
+        if(simpleListAdapter == null)
+            simpleListAdapter = new HorizontalSimpleListAdapter(mlist.subList(0,10));
 
-        mMadeForYouRecyclerView.setAdapter(itemAdapter);
+        mMadeForYouRecyclerView.setAdapter(simpleListAdapter);
     }
 
     private void setTopArtists(){
@@ -292,37 +288,61 @@ public class HomeFragment extends Fragment{
 
 
 
-    private class HorizontalItemHolder extends RecyclerView.ViewHolder{
+    private class HorizontalSimpleListHolder extends RecyclerView.ViewHolder{
 
-        private HorizontalItemHolder(View itemView) {
+        private ImageView imageView;
+        private TextView titleView;
+
+        private HorizontalSimpleListHolder(View itemView) {
             super(itemView);
+
+            imageView = itemView.findViewById(R.id.playlist_album_image);
+            titleView = itemView.findViewById(R.id.playlist_album_title);
         }
 
-        private void bindItem(String test){
+        private void bindItem(final SimplePlaylist simple){
+            titleView.setText(simple.getName());
 
+            Picasso.with(getContext())
+                    .load(simple.getImg_url())
+                    .transform(new Transformation() {
+                        @Override
+                        public Bitmap transform(Bitmap source) {
+                            final Bitmap copy = source.copy(source.getConfig(), true);
+                            source.recycle();
+
+                            return copy;
+                        }
+
+                        @Override
+                        public String key() {
+                            return simple.getName();
+                        }
+                    })
+                    .into(imageView);
         }
     }
 
-    private class HorizontalItemAdapter extends RecyclerView.Adapter<HorizontalItemHolder>{
+    private class HorizontalSimpleListAdapter extends RecyclerView.Adapter<HorizontalSimpleListHolder>{
 
-        private List<String> testList;
+        private List<SimplePlaylist> testList;
 
-        private HorizontalItemAdapter(List<String> list){
+        private HorizontalSimpleListAdapter(List<SimplePlaylist> list){
             testList = list;
         }
 
         @Override
-        public HorizontalItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public HorizontalSimpleListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
 
             View view = inflater.inflate(R.layout.album_view, parent, false);
 
-            return new HorizontalItemHolder(view);
+            return new HorizontalSimpleListHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(HorizontalItemHolder holder, int position) {
+        public void onBindViewHolder(HorizontalSimpleListHolder holder, int position) {
 
             holder.bindItem(testList.get(position));
         }

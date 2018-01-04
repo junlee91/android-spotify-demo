@@ -10,12 +10,13 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:id="@+id/playlist_album_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/maroon_sample_album"/>
 
     <TextView
-        android:id="@+id/album_title"
+        android:id="@+id/playlist_album_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"

@@ -3,6 +3,7 @@ package com.sodastudio.jun.spotify_demo.manager;
 import com.sodastudio.jun.spotify_demo.model.AlbumNew;
 import com.sodastudio.jun.spotify_demo.model.ArtistSearch;
 import com.sodastudio.jun.spotify_demo.model.Music;
+import com.sodastudio.jun.spotify_demo.model.SimplePlaylist;
 import com.sodastudio.jun.spotify_demo.model.TopArtist;
 import com.sodastudio.jun.spotify_demo.model.TopTrack;
 
@@ -21,6 +22,7 @@ public class ListManager {
     private ArrayList<AlbumNew> albumNewArrayList;
     private ArrayList<TopArtist> topArtists;
     private ArrayList<TopTrack> topTracks;
+    private ArrayList<SimplePlaylist> simplePlaylists;
 
     public static ListManager getInstance(){
         if(listManager == null){
@@ -36,6 +38,15 @@ public class ListManager {
         albumNewArrayList = new ArrayList<>();
         topArtists = new ArrayList<>();
         topTracks = new ArrayList<>();
+        simplePlaylists = new ArrayList<>();
+    }
+
+    public ArrayList<SimplePlaylist> getSimplePlaylists(){
+        return simplePlaylists;
+    }
+
+    public void addSimpleList(SimplePlaylist simple){
+        simplePlaylists.add(simple);
     }
 
     public ArrayList<TopTrack> getTopTracks(){

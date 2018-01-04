@@ -129,6 +129,8 @@ public class MainActivity extends AppCompatActivity
         //showToast("Login Success!");
 
         SearchPager.getInstance(this).getNewRelease(null);
+        SearchPager.getInstance(this).getMyTopTracks(null);
+        SearchPager.getInstance(this).getFeatured();
     }
 
     @Override

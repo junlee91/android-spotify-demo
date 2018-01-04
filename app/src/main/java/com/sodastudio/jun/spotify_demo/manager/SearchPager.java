@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.sodastudio.jun.spotify_demo.MainActivity;
 import com.sodastudio.jun.spotify_demo.model.AlbumNew;
+import com.sodastudio.jun.spotify_demo.model.SimplePlaylist;
 import com.sodastudio.jun.spotify_demo.model.TopArtist;
 import com.sodastudio.jun.spotify_demo.model.TopTrack;
 
@@ -20,6 +21,7 @@ import kaaes.spotify.webapi.android.models.Album;
 import kaaes.spotify.webapi.android.models.AlbumSimple;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.FeaturedPlaylists;
 import kaaes.spotify.webapi.android.models.NewReleases;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
@@ -234,7 +236,6 @@ public class SearchPager {
                     listener.onComplete();
             }
         });
-
     }
 
     public void getMyPlayList(){
@@ -256,6 +257,29 @@ public class SearchPager {
                     Log.d("SearchPager", simple.images.get(1).url);
                 }
 
+            }
+        });
+    }
+
+    public void getFeatured(){
+
+        spotifyService.getFeaturedPlaylists(new SpotifyCallback<FeaturedPlaylists>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.d("SearchPager", spotifyError.toString());
+            }
+
+            @Override
+            public void success(FeaturedPlaylists featuredPlaylists, Response response) {
+                List<PlaylistSimple> mlist = featuredPlaylists.playlists.items;
+
+                for(PlaylistSimple simple : mlist)
+                {
+                    Log.d("SearchPager Simple", simple.name);
+                    Log.d("SearchPager Simple", simple.images.get(0).url);
+
+                    ListManager.getInstance().addSimpleList(new SimplePlaylist(simple.name, simple.images.get(0).url));
+                }
             }
         });
     }
