@@ -3,7 +3,15 @@ Music player app using the Spotify Android SDK to play an audio track.
 
 [![Screenshot](screenshot/demo-first.gif)](https://github.com/junlee91/android-spotify-demo/blob/master/screenshot/demo-first.gif)
 
-## Installing Android SDK
+## Getting Started
+- Clone this repo:
+```sh
+https://github.com/junlee91/android-spotify-demo.git
+```
+- Open the project in Android Studio
+- Make sure to have `buildToolsVersion "26.0.2"`
+
+## Installing Spotify Android SDK
 You can follow the [Spotify Android SDK Tutorial](https://developer.spotify.com/technologies/spotify-android-sdk/tutorial/) to start the set up.
 
 ### Quick step
@@ -26,15 +34,14 @@ echo -n password | shasum -a 1 | awk '{print $1}'
 ```
 
 ## Get data from Spotify Web API
-- Thanks to Kaaes for providing an easy way to use Spotify API from Android Client
 - [Spotify Web API for Android](https://github.com/kaaes/spotify-web-api-android)
 - [Documentation](http://kaaes.github.io/spotify-web-api-android/)
 
 ## ScalingLayout
-- Thanks to iammert for these awesome layouts 
 - Follow the instructions from [here](https://github.com/iammert/ScalingLayout)
 
 ## Dependency
+If you use Android Studio as recommended, the following dependencies will automatically be installed by Gradle.
 ```sh
 android{
     vectorDrawables.useSupportLibrary = true
@@ -50,11 +57,13 @@ repositories {
 
 dependencies {
     ...
+    compile 'com.github.iammert:ScalingLayout:1.1'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 
     compile 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'
     compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
-    
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
-    compile 'com.github.iammert:ScalingLayout:1.1'  
 }
 ``` 
