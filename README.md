@@ -1,5 +1,5 @@
-# spotify-demo (work-in-progress 👷🔧️👷‍♀️⛏)
-Music player app using the Spotify Android SDK to play an audio track.
+# spotify-demo
+Music player app using the Spotify Android SDK and Spotify Web API.
 
 [![Screenshot](screenshot/screens.png)](https://github.com/junlee91/android-spotify-demo/blob/master/screenshot/screens.png)
 
