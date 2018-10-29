@@ -1,6 +1,8 @@
 # spotify-demo
 Music player app using the Spotify Android SDK and Spotify Web API.
 
+**_Note: Some of components are missing and some packages may deprecated._**
+
 [![Screenshot](screenshot/screens.png)](https://github.com/junlee91/android-spotify-demo/blob/master/screenshot/screens.png)
 
 ## YouTube Demo
@@ -32,7 +34,7 @@ You can follow the [Spotify Android SDK Tutorial](https://developer.spotify.com/
 - Create `\android-auth-1.0\local.properties` and add `sdk.dir=/Users/%YOUR_PC_USERNAME%/Library/Android/sdk` for path to the Android SDK
 - Run `./gradlew build` and grab an artifact from `auth-lib/build/outputs/aar/`.
 
-## Generate SHA1 
+## Generate SHA1
 This step is needed for registering application fingerprint
 ```sh
 echo -n password | shasum -a 1 | awk '{print $1}'
@@ -71,4 +73,4 @@ dependencies {
     compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
 }
-``` 
+```
