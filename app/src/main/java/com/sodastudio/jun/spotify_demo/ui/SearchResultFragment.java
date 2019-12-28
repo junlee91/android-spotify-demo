@@ -31,6 +31,7 @@ import com.spotify.sdk.android.player.SpotifyPlayer;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Track;
@@ -304,21 +305,34 @@ public class SearchResultFragment extends Fragment implements SpotifyPlayer.Noti
                 @Override
                 public void onClick(View view) {
 
-                    if(mPlayer.getPlaybackState().isPlaying) {
+                    if (mPlayer.getPlaybackState().isPlaying) {
                         String album = mPlayer.getMetadata().currentTrack.albumName;
                         String title = mPlayer.getMetadata().currentTrack.name;
 
                         Music prevMusic = ListManager.getInstance().findCurrentMusic(title, album);
 
-                        if(prevMusic != null) {
+                        if (prevMusic != null) {
                             Log.d(TAG, "prev playing: " + prevMusic.getTitle());
                             prevMusic.setPlaying(false);
                         }
                     }
 
+                    // Check again
+                    String prevTitle = ListManager.getInstance().getCurrent_playing_title();
+                    String prevAlbum = ListManager.getInstance().getCurrent_playing_album();
+
+                    Music prevMusic = ListManager.getInstance().findCurrentMusic(prevTitle, prevAlbum);
+                    if (prevMusic != null) {
+                        prevMusic.setPlaying(false);
+                    }
+
+                    // Play music
                     mPlayer.playUri(null, music.getUri(), 0, 0);
                     Log.d(TAG, "now playing: " + music.getTitle());
                     music.setPlaying(true);
+
+                    ListManager.getInstance().setCurrent_playing_title(music.getTitle());
+                    ListManager.getInstance().setCurrent_playing_album(music.getAlbum());
 
                     mAdapter.notifyDataSetChanged();
                 }

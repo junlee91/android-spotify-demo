@@ -32,18 +32,18 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    compile 'com.github.iammert:ScalingLayout:1.1'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.github.iammert:ScalingLayout:1.1'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
-    compile 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'
-    compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
-    compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
+    implementation 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'
+    implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
+    implementation 'com.github.kaaes:spotify-web-api-android:0.4.1'
 }

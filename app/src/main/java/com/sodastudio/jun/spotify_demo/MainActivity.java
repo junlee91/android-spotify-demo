@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoginFailed(Error error) {
         Log.d(TAG, "Login failed");
+        showToast("Login failed. You need Spotify Premium to use the app.");
     }
 
     @Override

@@ -87,6 +87,11 @@ public class HomeFragment extends Fragment{
 
         ArrayList<SimplePlaylist> mlist = ListManager.getInstance().getSimplePlaylists();
 
+        if (mlist == null || mlist.isEmpty()) {
+            Log.d(TAG, "List is empty");
+            return;
+        }
+
         if(simpleListAdapter == null)
             simpleListAdapter = new HorizontalSimpleListAdapter(mlist.subList(0,10));
 

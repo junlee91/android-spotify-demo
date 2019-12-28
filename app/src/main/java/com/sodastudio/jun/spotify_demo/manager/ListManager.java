@@ -24,6 +24,9 @@ public class ListManager {
     private ArrayList<TopTrack> topTracks;
     private ArrayList<SimplePlaylist> simplePlaylists;
 
+    private String current_playing_title;
+    private String current_playing_album;
+
     public static ListManager getInstance(){
         if(listManager == null){
             listManager = new ListManager();
@@ -39,6 +42,9 @@ public class ListManager {
         topArtists = new ArrayList<>();
         topTracks = new ArrayList<>();
         simplePlaylists = new ArrayList<>();
+
+        current_playing_title = null;
+        current_playing_album = null;
     }
 
     public ArrayList<SimplePlaylist> getSimplePlaylists(){
@@ -116,5 +122,21 @@ public class ListManager {
         }
 
         return null;
+    }
+
+    public String getCurrent_playing_title() {
+        return current_playing_title;
+    }
+
+    public void setCurrent_playing_title(String current_playing_title) {
+        this.current_playing_title = current_playing_title;
+    }
+
+    public String getCurrent_playing_album() {
+        return current_playing_album;
+    }
+
+    public void setCurrent_playing_album(String current_playing_album) {
+        this.current_playing_album = current_playing_album;
     }
 }
