@@ -1,7 +1,9 @@
+**This project is paused!!** 🙏
+
+Some components may not work and some packages/dependencies are deprecated. 
+
 # spotify-demo
 Music player app using the Spotify Android SDK and Spotify Web API.
-
-**_Note: Some of components are missing and some packages may deprecated._**
 
 [![Screenshot](screenshot/screens.png)](https://github.com/junlee91/android-spotify-demo/blob/master/screenshot/screens.png)
 
